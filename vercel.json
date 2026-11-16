@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/favicon.ico",
+      "destination": "/assets/images/alam-abstract-a.svg"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(favicon\\.ico|favicon\\.svg|site\\.webmanifest|assets/images/alam-abstract-a\\.svg)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

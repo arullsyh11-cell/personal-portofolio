@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALAM | Personal Brand Logo Exploration Sheet</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/alam-abstract-a.svg?v=2" />
+  <link rel="shortcut icon" type="image/svg+xml" href="assets/images/alam-abstract-a.svg?v=2" />
+  <link rel="apple-touch-icon" href="assets/images/alam-abstract-a.svg?v=2" />
+  <link rel="manifest" href="site.webmanifest?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --bg-canvas: #080808;
+      --bg-card: #0c0c0e;
+      --bg-well: #080808;
+      --border-hairline: rgba(255, 255, 255, 0.09);
+      --border-strong: rgba(255, 255, 255, 0.2);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --silver: #b8c0cc;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--text-primary);
+      outline-offset: 2px;
+    }
+
+    .sheet {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
+    }
+
+    .sheet-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 24px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border-hairline);
+      margin-bottom: 40px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      margin: 0;
+      line-height: 1.15;
+    }
+
+    .header-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .meta-item strong {
+      display: block;
+      color: var(--text-primary);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .concept-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .concept-card.concept-wide {
+      grid-column: span 2;
+    }
+
+    .concept-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .concept-index {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 0 0 4px;
+    }
+
+    .concept-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .concept-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-action {
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-hairline);
+      background-color: #131316;
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 500;
+      transition: border-color 150ms ease, background-color 150ms ease;
+    }
+
+    .btn-action:hover {
+      border-color: var(--border-strong);
+      background-color: #1a1a1f;
+    }
+
+    .btn-action[data-copied="true"] {
+      border-color: var(--text-primary);
+      color: var(--text-primary);
+    }
+
+    .stage {
+      background-color: var(--bg-well);
+      border: 1px solid var(--border-hairline);
+      border-radius: 12px;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .stage-mark {
+      width: 120px;
+      height: 120px;
+      display: block;
+    }
+
+    .stage-wordmark {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display: block;
+    }
+
+    .scale-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-hairline);
+    }
+
+    .scale-samples {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .sample-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sample-well {
+      background-color: var(--bg-well);
+      border: 1px solid var(--border-hairline);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+    }
+
+    .sample-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .concept-notes {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .sheet-footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 820px) {
+      .concepts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .concept-card.concept-wide {
+        grid-column: span 1;
+      }
+
+      .concept-top {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn-action {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sheet">
+    <header class="sheet-header">
+      <div>
+        <p class="eyebrow">Brand Identity Exploration / Monochrome System</p>
+        <h1>ALAM Logo Exploration Sheet</h1>
+      </div>
+      <div class="header-meta">
+        <div class="meta-item">
+          <strong>Brand</strong>
+          ALAM / A
+        </div>
+        <div class="meta-item">
+          <strong>Surface</strong>
+          #080808 Pure Black
+        </div>
+        <div class="meta-item">
+          <strong>Palette</strong>
+          #FFFFFF / #B8C0CC
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="concepts-grid" aria-label="Logo concepts">
+        <!-- Concept 01: Minimal Monogram A -->
+        <article class="concept-card">
+          <div class="concept-top">
+            <div>
+              <p class="concept-index">01 / MONOGRAM</p>
+              <h2 class="concept-title">Minimal Monogram A</h2>
+            </div>
+            <div class="concept-actions">
+              <button type="button" class="btn-action" data-copy-target="logo-01">Copy SVG</button>
+              <button type="button" class="btn-action" data-download-target="logo-01"
+                data-filename="alam-monogram-a.svg">Download</button>
+            </div>
+          </div>
+
+          <div class="stage">
+            <svg id="logo-01" class="stage-mark" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"
+              role="img" aria-label="Minimal Monogram A logo">
+              <path d="M52 18H68L84.7 62H66.5L60 44L38 102H20L52 18Z" fill="#FFFFFF" />
+              <path d="M54 72H88.6L100 102H82L75.5 85H49L54 72Z" fill="#B8C0CC" />
+            </svg>
+          </div>
+
+          <p class="concept-notes">
+            Cantilevered geometric A with a 10-unit architectural break in the right shoulder and an inset silver
+            crossbar wedge. Engineered to hold its silhouette at 16px favicon scale.
+          </p>
+
+          <div class="scale-strip">
+            <div class="scale-samples">
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="16" height="16" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M52 18H68L84.7 62H66.5L60 44L38 102H20L52 18Z" fill="#FFFFFF" />
+                    <path d="M54 72H88.6L100 102H82L75.5 85H49L54 72Z" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">16px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="24" height="24" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M52 18H68L84.7 62H66.5L60 44L38 102H20L52 18Z" fill="#FFFFFF" />
+                    <path d="M54 72H88.6L100 102H82L75.5 85H49L54 72Z" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">24px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="40" height="40" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M52 18H68L84.7 62H66.5L60 44L38 102H20L52 18Z" fill="#FFFFFF" />
+                    <path d="M54 72H88.6L100 102H82L75.5 85H49L54 72Z" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">40px</span>
+              </div>
+            </div>
+            <span class="sample-label">Favicon / Navbar / Avatar</span>
+          </div>
+        </article>
+
+        <!-- Concept 03: Abstract A Symbol -->
+        <article class="concept-card">
+          <div class="concept-top">
+            <div>
+              <p class="concept-index">03 / ABSTRACT SYMBOL</p>
+              <h2 class="concept-title">Abstract A Symbol</h2>
+            </div>
+            <div class="concept-actions">
+              <button type="button" class="btn-action" data-copy-target="logo-03">Copy SVG</button>
+              <button type="button" class="btn-action" data-download-target="logo-03"
+                data-filename="alam-abstract-a.svg">Download</button>
+            </div>
+          </div>
+
+          <div class="stage">
+            <svg id="logo-03" class="stage-mark" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"
+              role="img" aria-label="Abstract A Symbol logo">
+              <path d="M52 18H66L36 102H20L52 18Z" fill="#FFFFFF" />
+              <path d="M72 28L100 102H83L64 50L72 28Z" fill="#B8C0CC" />
+              <path d="M46 72H72L77 85H41L46 72Z" fill="#FFFFFF" />
+            </svg>
+          </div>
+
+          <p class="concept-notes">
+            Three flat spatial planes arranged as a faceted A monolith. References 3D geometry and architectural
+            elevation through pure planar separation without gradients or drop shadows.
+          </p>
+
+          <div class="scale-strip">
+            <div class="scale-samples">
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="16" height="16" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M52 18H66L36 102H20L52 18Z" fill="#FFFFFF" />
+                    <path d="M72 28L100 102H83L64 50L72 28Z" fill="#B8C0CC" />
+                    <path d="M46 72H72L77 85H41L46 72Z" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <span class="sample-label">16px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="24" height="24" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M52 18H66L36 102H20L52 18Z" fill="#FFFFFF" />
+                    <path d="M72 28L100 102H83L64 50L72 28Z" fill="#B8C0CC" />
+                    <path d="M46 72H72L77 85H41L46 72Z" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <span class="sample-label">24px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="40" height="40" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M52 18H66L36 102H20L52 18Z" fill="#FFFFFF" />
+                    <path d="M72 28L100 102H83L64 50L72 28Z" fill="#B8C0CC" />
+                    <path d="M46 72H72L77 85H41L46 72Z" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <span class="sample-label">40px</span>
+              </div>
+            </div>
+            <span class="sample-label">Favicon / Navbar / Avatar</span>
+          </div>
+        </article>
+
+        <!-- Concept 02: ALAM Wordmark (Full Width) -->
+        <article class="concept-card concept-wide">
+          <div class="concept-top">
+            <div>
+              <p class="concept-index">02 / WORDMARK</p>
+              <h2 class="concept-title">ALAM Wordmark</h2>
+            </div>
+            <div class="concept-actions">
+              <button type="button" class="btn-action" data-copy-target="logo-02">Copy SVG</button>
+              <button type="button" class="btn-action" data-download-target="logo-02"
+                data-filename="alam-wordmark.svg">Download</button>
+            </div>
+          </div>
+
+          <div class="stage">
+            <svg id="logo-02" class="stage-wordmark" viewBox="0 0 360 96" fill="none" xmlns="http://www.w3.org/2000/svg"
+              role="img" aria-label="ALAM custom typographic wordmark">
+              <!-- A -->
+              <path d="M47 20H59L82 76H70L53 34L36 76H24L47 20Z" fill="#FFFFFF" />
+              <path d="M45 57H61L64 65H42L45 57Z" fill="#B8C0CC" />
+              <!-- L -->
+              <path d="M106 20H117V66H152V76H106V20Z" fill="#FFFFFF" />
+              <!-- A -->
+              <path d="M197 20H209L232 76H220L203 34L186 76H174L197 20Z" fill="#FFFFFF" />
+              <path d="M195 57H211L214 65H192L195 57Z" fill="#B8C0CC" />
+              <!-- M -->
+              <path d="M256 20H268L296 58L324 20H336V76H325V37L299 72H293L267 37V76H256V20Z" fill="#FFFFFF" />
+            </svg>
+          </div>
+
+          <p class="concept-notes">
+            Custom-drawn geometric letterforms with uniform 11-unit stroke weight, flat-cut apexes, and floating silver
+            crossbars in both A glyphs for visual rhythm across the wordmark.
+          </p>
+
+          <div class="scale-strip">
+            <div class="scale-samples">
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="72" height="20" viewBox="0 0 360 96" fill="none" aria-hidden="true">
+                    <path d="M47 20H59L82 76H70L53 34L36 76H24L47 20Z" fill="#FFFFFF" />
+                    <path d="M45 57H61L64 65H42L45 57Z" fill="#B8C0CC" />
+                    <path d="M106 20H117V66H152V76H106V20Z" fill="#FFFFFF" />
+                    <path d="M197 20H209L232 76H220L203 34L186 76H174L197 20Z" fill="#FFFFFF" />
+                    <path d="M195 57H211L214 65H192L195 57Z" fill="#B8C0CC" />
+                    <path d="M256 20H268L296 58L324 20H336V76H325V37L299 72H293L267 37V76H256V20Z" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <span class="sample-label">72px Navbar</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="120" height="32" viewBox="0 0 360 96" fill="none" aria-hidden="true">
+                    <path d="M47 20H59L82 76H70L53 34L36 76H24L47 20Z" fill="#FFFFFF" />
+                    <path d="M45 57H61L64 65H42L45 57Z" fill="#B8C0CC" />
+                    <path d="M106 20H117V66H152V76H106V20Z" fill="#FFFFFF" />
+                    <path d="M197 20H209L232 76H220L203 34L186 76H174L197 20Z" fill="#FFFFFF" />
+                    <path d="M195 57H211L214 65H192L195 57Z" fill="#B8C0CC" />
+                    <path d="M256 20H268L296 58L324 20H336V76H325V37L299 72H293L267 37V76H256V20Z" fill="#FFFFFF" />
+                  </svg>
+                </div>
+                <span class="sample-label">120px Header</span>
+              </div>
+            </div>
+            <span class="sample-label">Primary Navigation Lockup</span>
+          </div>
+        </article>
+
+        <!-- Concept 04: A + L Monogram -->
+        <article class="concept-card">
+          <div class="concept-top">
+            <div>
+              <p class="concept-index">04 / LIGATURE MONOGRAM</p>
+              <h2 class="concept-title">A + L Monogram</h2>
+            </div>
+            <div class="concept-actions">
+              <button type="button" class="btn-action" data-copy-target="logo-04">Copy SVG</button>
+              <button type="button" class="btn-action" data-download-target="logo-04"
+                data-filename="alam-al-monogram.svg">Download</button>
+            </div>
+          </div>
+
+          <div class="stage">
+            <svg id="logo-04" class="stage-mark" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"
+              role="img" aria-label="A plus L Monogram logo">
+              <path d="M48 20H58V78H37L32 100H18L48 20ZM48 44L40 66H48V44Z" fill="#FFFFFF" />
+              <path d="M66 20H80V86H102V100H66V20Z" fill="#B8C0CC" />
+            </svg>
+          </div>
+
+          <p class="concept-notes">
+            Compact architectural ligature fusing a right-aligned A with a silver L spine across an 8-unit vertical
+            channel. Both initials remain distinct even when rendered in single-color white.
+          </p>
+
+          <div class="scale-strip">
+            <div class="scale-samples">
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="16" height="16" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M48 20H58V78H37L32 100H18L48 20ZM48 44L40 66H48V44Z" fill="#FFFFFF" />
+                    <path d="M66 20H80V86H102V100H66V20Z" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">16px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="24" height="24" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M48 20H58V78H37L32 100H18L48 20ZM48 44L40 66H48V44Z" fill="#FFFFFF" />
+                    <path d="M66 20H80V86H102V100H66V20Z" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">24px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="40" height="40" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M48 20H58V78H37L32 100H18L48 20ZM48 44L40 66H48V44Z" fill="#FFFFFF" />
+                    <path d="M66 20H80V86H102V100H66V20Z" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">40px</span>
+              </div>
+            </div>
+            <span class="sample-label">Favicon / Navbar / Avatar</span>
+          </div>
+        </article>
+
+        <!-- Concept 05: Creative Studio Emblem -->
+        <article class="concept-card">
+          <div class="concept-top">
+            <div>
+              <p class="concept-index">05 / STUDIO EMBLEM</p>
+              <h2 class="concept-title">Creative Studio Emblem</h2>
+            </div>
+            <div class="concept-actions">
+              <button type="button" class="btn-action" data-copy-target="logo-05">Copy SVG</button>
+              <button type="button" class="btn-action" data-download-target="logo-05"
+                data-filename="alam-studio-emblem.svg">Download</button>
+            </div>
+          </div>
+
+          <div class="stage">
+            <svg id="logo-05" class="stage-mark" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"
+              role="img" aria-label="Creative Studio Emblem logo">
+              <path d="M34 16H86L104 34V86L86 104H34L16 86V34L34 16Z" stroke="#94A3B8" stroke-width="5" />
+              <path d="M55 34H65L84 86H72L60 51L48 86H36L55 34Z" fill="#FFFFFF" />
+              <rect x="49" y="68" width="22" height="7" fill="#B8C0CC" />
+            </svg>
+          </div>
+
+          <p class="concept-notes">
+            Precision-chamfered octagonal housing in metallic slate framing a centered geometric A monolith. Built with
+            a 5-unit stroke so the emblem boundary stays crisp in social avatars and app icons.
+          </p>
+
+          <div class="scale-strip">
+            <div class="scale-samples">
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="16" height="16" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M34 16H86L104 34V86L86 104H34L16 86V34L34 16Z" stroke="#94A3B8" stroke-width="5" />
+                    <path d="M55 34H65L84 86H72L60 51L48 86H36L55 34Z" fill="#FFFFFF" />
+                    <rect x="49" y="68" width="22" height="7" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">16px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="24" height="24" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M34 16H86L104 34V86L86 104H34L16 86V34L34 16Z" stroke="#94A3B8" stroke-width="5" />
+                    <path d="M55 34H65L84 86H72L60 51L48 86H36L55 34Z" fill="#FFFFFF" />
+                    <rect x="49" y="68" width="22" height="7" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">24px</span>
+              </div>
+              <div class="sample-box">
+                <div class="sample-well">
+                  <svg width="40" height="40" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+                    <path d="M34 16H86L104 34V86L86 104H34L16 86V34L34 16Z" stroke="#94A3B8" stroke-width="5" />
+                    <path d="M55 34H65L84 86H72L60 51L48 86H36L55 34Z" fill="#FFFFFF" />
+                    <rect x="49" y="68" width="22" height="7" fill="#B8C0CC" />
+                  </svg>
+                </div>
+                <span class="sample-label">40px</span>
+              </div>
+            </div>
+            <span class="sample-label">Favicon / Navbar / Avatar</span>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="sheet-footer">
+      <span>ALAM Brand System / 5 Flat Vector Concepts</span>
+      <span>Monochrome #FFFFFF / #B8C0CC on #080808</span>
+    </footer>
+  </div>
+
+  <script>
+    document.querySelectorAll("[data-copy-target]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const targetId = button.getAttribute("data-copy-target");
+        const svg = document.getElementById(targetId);
+        if (!svg) return;
+
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svg);
+
+        try {
+          await navigator.clipboard.writeText(svgString);
+          const originalText = button.textContent;
+          button.textContent = "Copied";
+          button.setAttribute("data-copied", "true");
+          setTimeout(() => {
+            button.textContent = originalText;
+            button.removeAttribute("data-copied");
+          }, 1600);
+        } catch {
+          button.textContent = "Copy failed";
+          setTimeout(() => {
+            button.textContent = "Copy SVG";
+          }, 1600);
+        }
+      });
+    });
+
+    document.querySelectorAll("[data-download-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const targetId = button.getAttribute("data-download-target");
+        const filename = button.getAttribute("data-filename") || "logo.svg";
+        const svg = document.getElementById(targetId);
+        if (!svg) return;
+
+        const serializer = new XMLSerializer();
+        const svgString = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(svg);
+        const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      });
+    });
+  </script>
+</body>
+
+</html>

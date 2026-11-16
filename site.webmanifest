@@ -1,0 +1,23 @@
+{
+  "name": "Muhammad Khoirul Alamsyah | Portfolio",
+  "short_name": "ALAM",
+  "description": "Portfolio of Muhammad Khoirul Alamsyah - 3D Generalist, 3D LRC Artist & Frontend Developer.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#08080A",
+  "theme_color": "#08080A",
+  "icons": [
+    {
+      "src": "assets/images/alam-abstract-a.svg?v=2",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.svg?v=2",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
