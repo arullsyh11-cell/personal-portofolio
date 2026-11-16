@@ -283,18 +283,13 @@ const portfolioData = {
         icon: "mail",
       },
       {
-        label: "WhatsApp Chat",
-        url: "https://wa.me/6281234567890",
-        icon: "whatsapp",
-      },
-      {
         label: "LinkedIn Message",
-        url: "https://linkedin.com",
+        url: "https://www.linkedin.com/in/m-khoirul-alamsyah-2b2315450/",
         icon: "linkedin",
       },
       {
         label: "GitHub Profile",
-        url: "https://github.com",
+        url: "https://github.com/arullsyh11-cell",
         icon: "github",
       },
     ],
