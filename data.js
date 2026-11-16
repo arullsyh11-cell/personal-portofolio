@@ -232,9 +232,9 @@ const portfolioData = {
   // ----------------------------------------------------------------------------
   experience: [
     {
-      role: "3D Generalist & LRC Artist",
+      role: "Magang 3D Generalist & LRC Artist",
       company: "Creative Digital Studio",
-      period: "2023 - Present",
+      period: "2023 - 2024",
       location: "Jakarta, Indonesia (Hybrid)",
       description: [
         "Mengerjakan pipeline tata pencahayaan (lighting), shading material, dan rendering untuk scene 3D komersial dan visual produk.",
@@ -246,8 +246,8 @@ const portfolioData = {
     {
       role: "Frontend Web Developer (React JS)",
       company: "Independent Web Projects",
-      period: "2022 - 2023",
-      location: "Remote",
+      period: "2025 - Present",
+      location: "Personal Project",
       description: [
         "Merancang dan mengembangkan aplikasi web kebugaran GYMFlow menggunakan React JS dan Tailwind CSS.",
         "Membangun aplikasi produktivitas ORBIT dengan fitur kanban board, real-time focus timer, dan manajemen state modular.",
