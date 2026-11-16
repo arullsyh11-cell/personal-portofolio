@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <linearGradient id="bgGen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0B0E"/>
+      <stop offset="50%" stop-color="#14141A"/>
+      <stop offset="100%" stop-color="#08080A"/>
+    </linearGradient>
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748B"/>
+      <stop offset="50%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bgGen)"/>
+  <!-- Wireframe to Shaded split line -->
+  <line x1="400" y1="50" x2="400" y2="400" stroke="#F8FAFC" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <text x="240" y="70" fill="#94A3B8" font-family="monospace" font-size="12" text-anchor="middle">WIREFRAME TOPOLOGY</text>
+  <text x="560" y="70" fill="#34D399" font-family="monospace" font-size="12" text-anchor="middle">FINAL SHADED RENDER</text>
+  <!-- 3D Environment / Hard Surface Mesh (Left Side Wireframe) -->
+  <path d="M 120,330 L 220,180 L 380,180 L 380,330 Z" fill="none" stroke="#64748B" stroke-width="1.5"/>
+  <line x1="120" y1="330" x2="380" y2="180" stroke="#475569" stroke-width="1"/>
+  <line x1="220" y1="180" x2="260" y2="330" stroke="#475569" stroke-width="1"/>
+  <circle cx="220" cy="180" r="3" fill="#94A3B8"/>
+  <circle cx="380" cy="180" r="3" fill="#94A3B8"/>
+  <circle cx="120" cy="330" r="3" fill="#94A3B8"/>
+  <circle cx="260" cy="330" r="3" fill="#94A3B8"/>
+  <circle cx="380" cy="330" r="3" fill="#94A3B8"/>
+  <!-- 3D Hard Surface Mesh (Right Side Shaded) -->
+  <polygon points="400,180 580,180 680,330 400,330" fill="#1C1C26" stroke="rgba(255,255,255,0.2)"/>
+  <polygon points="400,180 580,180 540,330 400,330" fill="#282836"/>
+  <polygon points="580,180 680,330 640,330" fill="#16161E"/>
+  <!-- Specular highlight streak -->
+  <line x1="420" y1="185" x2="570" y2="185" stroke="#FFFFFF" stroke-width="2"/>
+  <!-- Floating Labels -->
+  <rect x="70" y="380" width="260" height="28" rx="6" fill="#121217" stroke="rgba(255,255,255,0.08)"/>
+  <text x="85" y="398" fill="#CBD5E1" font-family="monospace" font-size="11">SubD Quad Topology · UV Layout</text>
+  <rect x="470" y="380" width="260" height="28" rx="6" fill="#121217" stroke="rgba(255,255,255,0.08)"/>
+  <text x="485" y="398" fill="#34D399" font-family="monospace" font-size="11">PBR 4K Textures · Octane / Cycles</text>
+  <text x="400" y="35" fill="#CBD5E1" font-family="monospace" font-size="12" text-anchor="middle" letter-spacing="2">3D GENERALIST · ASSET &amp; SCENE DESIGN</text>
+</svg>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muhammad Khoirul Alamsyah | Frontend Software Engineer & 3D Modeler</title>
+  <meta name="description"
+    content="Portfolio of Muhammad Khoirul Alamsyah. Modern single-page developer portfolio with dark charcoal and glossy monochrome aesthetics.">
+  <meta name="theme-color" content="#08080A">
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            charcoal: {
+              950: '#08080A',
+              900: '#0E0E11',
+              850: '#111114',
+              800: '#141418',
+              700: '#1C1C22',
+            },
+            metal: {
+              300: '#CBD5E1',
+              400: '#94A3B8',
+              500: '#64748B',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles: Glossy Streaks, Monochrome Polish & Accessibility -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-[#08080A] text-[#F8FAFC] antialiased selection:bg-white/20 selection:text-white">
+
+  <!-- Diagonal Glossy Light Streaks Background Layer (Subtle Glass Reflection) -->
+  <div class="glossy-streaks-bg" aria-hidden="true"></div>
+
+  <!-- Main Website Shell -->
+  <div class="site-content min-h-screen flex flex-col justify-between">
+
+    <!-- ========================================================================
+         1. FLOATING PILL NAVBAR (Liquid Glass Capsule - Desktop & Mobile Unified)
+         ======================================================================== -->
+    <header class="fixed top-3 sm:top-5 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none">
+      <div id="floating-navbar"
+        class="pointer-events-auto floating-capsule w-full max-w-[23rem] md:max-w-3xl min-h-[3.25rem] sm:min-h-[3.5rem] flex items-center justify-between gap-2 sm:gap-3 px-2.5 py-1.5 sm:p-2 rounded-full">
+
+        <!-- Left: Circular Monogram Logo Mark -->
+        <a href="#"
+          class="min-h-9 min-w-9 sm:min-h-11 sm:min-w-11 flex items-center justify-center group focus-visible:outline-none shrink-0"
+          aria-label="Khoirul Alamsyah - Home">
+          <div
+            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black border border-white/20 flex items-center justify-center font-bold text-white text-sm sm:text-base tracking-tight group-hover:scale-105 group-hover:border-white/40 transition-all shadow-md">
+            <span id="nav-monogram-text" class="font-sans font-extrabold select-none">A</span>
+          </div>
+        </a>
+
+        <!-- Middle: Navigation Links (Zero empty gap on Mobile, centered on Desktop) -->
+        <nav
+          class="flex-1 md:flex-initial flex items-center justify-between md:justify-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar"
+          id="nav-links-desktop" aria-label="Main Navigation">
+          <!-- Populated from data.js: Projects, About, Experience, Contact -->
+        </nav>
+
+        <!-- Right: High-Contrast White Email Pill Button (Desktop) -->
+        <div class="hidden md:flex items-center shrink-0">
+          <button type="button" id="nav-email-pill-btn"
+            class="inline-flex items-center gap-2 bg-white hover:bg-slate-200 text-black font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-150 shadow-md hover:shadow-lg focus-visible:outline-none active:scale-[0.98]"
+            aria-label="Copy email address to clipboard">
+            <span id="nav-email-text" class="font-sans">arullsyh11@gmail.com</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ========================================================================
+         MAIN CONTENT SECTIONS
+         ======================================================================== -->
+    <main class="flex-grow">
+
+      <!-- ======================================================================
+           2. HERO SECTION (Name on Left, Soft Rounded-Square Photo on Right)
+           ====================================================================== -->
+      <section class="relative pt-28 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 max-w-6xl mx-auto"
+        aria-labelledby="hero-headline">
+
+        <div class="hero-split-layout">
+          <!-- Left Column: Status Badge, Name, Subheadline & Primary CTA -->
+          <div class="hero-text-column">
+            <!-- Status Pill -->
+            <div
+              class="inline-flex max-w-full items-center px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm mb-5 sm:mb-6"
+              id="hero-status-pill">
+              <!-- Populated from data.js -->
+            </div>
+
+            <!-- High-Impact Bold Headline (Name on Left) -->
+            <h1 id="hero-headline"
+              class="hero-identity-title text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.08] mb-4 sm:mb-5">
+              <!-- Populated from data.js -->
+            </h1>
+
+            <!-- Subheadline -->
+            <p id="hero-subheadline"
+              class="text-sm sm:text-lg text-[#94A3B8] max-w-2xl leading-relaxed mb-7 sm:mb-8 font-normal">
+              <!-- Populated from data.js -->
+            </p>
+
+            <!-- CTA Pill Button -->
+            <div class="mb-6 sm:mb-8">
+              <a id="hero-secondary-cta" href="#projects"
+                class="group inline-flex items-center gap-2 px-6 py-3 min-h-[44px] rounded-full border border-white/15 hover:border-white/30 bg-white/[0.04] hover:bg-white/[0.08] text-xs sm:text-sm font-sans font-medium text-slate-200 hover:text-white transition-all duration-150 focus-visible:outline-none">
+                <!-- Populated from data.js -->
+              </a>
+            </div>
+
+            <!-- Bottom Micro-note -->
+            <p id="hero-micro-note"
+              class="font-mono text-[11px] text-slate-500 tracking-tight leading-relaxed break-words">
+              <!-- Populated from data.js -->
+            </p>
+          </div>
+
+          <!-- Right Column: Rounded-Square Profile Photo (Not circle, not sharp) -->
+          <div class="hero-photo-column">
+            <div class="hero-profile-photo">
+              <img src="assets/images/profile.jpg" alt="Foto profil Muhammad Khoirul Alamsyah" width="280" height="280"
+                fetchpriority="high">
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================================
+           3. SELECTED PROJECTS (Bento / Clean Grid with Category Filter)
+           ====================================================================== -->
+      <section id="projects" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
+        aria-labelledby="projects-heading">
+
+        <!-- Section Header -->
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-5 mb-10">
+          <div>
+            <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Portfolio Showcase</div>
+            <h2 id="projects-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              Selected Projects
+            </h2>
+          </div>
+
+          <!-- Category Filter Tabs (Clean Segmented Pill Bar for Mobile & Desktop) -->
+          <div
+            class="inline-flex flex-wrap items-center gap-1.5 p-1.5 rounded-full bg-[#0E0E12] border border-white/10 self-start sm:self-auto"
+            id="project-category-filters" role="group" aria-label="Filter projects by category">
+            <!-- Populated from data.js -->
+          </div>
+        </div>
+
+        <!-- Projects Grid (2-3 columns with featured item hierarchy) -->
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Populated from data.js -->
+        </div>
+
+      </section>
+
+      <!-- ======================================================================
+           4. ABOUT SECTION
+           ====================================================================== -->
+      <section id="about" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
+        aria-labelledby="about-title">
+
+        <!-- Header & Background Bio -->
+        <div class="mb-12 text-left">
+          <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Background & Philosophy</div>
+          <h2 id="about-title" class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-3">
+            <!-- Populated from data.js -->
+          </h2>
+          <p id="about-subtitle" class="text-sm sm:text-base text-slate-400 mb-8">
+            <!-- Populated from data.js -->
+          </p>
+
+          <!-- Bio Paragraphs -->
+          <div id="about-paragraphs" class="max-w-5xl space-y-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+            <!-- Populated from data.js -->
+          </div>
+        </div>
+
+        <!-- Principles (Spacious, Generous Cards) -->
+        <div>
+          <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-5">Core Principles</div>
+          <div id="about-principles" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Populated from data.js with generous padding and clear typography -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ======================================================================
+           5. EXPERIENCE SECTION (Timeline of Professional Roles)
+           ====================================================================== -->
+      <section id="experience" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
+        aria-labelledby="experience-heading">
+        <div class="mb-10 text-left">
+          <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Career Journey</div>
+          <h2 id="experience-heading" class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">
+            Professional Experience
+          </h2>
+          <p class="text-sm text-slate-400">
+            Previous positions, leadership roles, and technical milestones.
+          </p>
+        </div>
+
+        <div id="experience-timeline" class="mt-8">
+          <!-- Populated from data.js -->
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           6. CONTACT & COLLABORATION SECTION
+           ====================================================================== -->
+      <section id="contact" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06] text-center"
+        aria-labelledby="contact-title">
+        <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Communication</div>
+        <h2 id="contact-title" class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-4">
+          <!-- Populated from data.js -->
+        </h2>
+        <p id="contact-subtitle" class="text-sm sm:text-base text-slate-400 max-w-xl mx-auto mb-8 leading-relaxed">
+          <!-- Populated from data.js -->
+        </p>
+
+        <!-- Direct Email Pill Box (Equal height buttons as requested in Gambar 5) -->
+        <div
+          class="inline-flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 p-2.5 rounded-2xl border border-white/10 bg-[#0E0E11] mb-6 max-w-full">
+          <div class="px-4 py-1.5 font-mono text-xs sm:text-sm text-slate-200 break-all" id="contact-email-text">
+            <!-- Populated from data.js -->
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-center">
+            <button type="button" id="contact-copy-email-btn"
+              class="contact-action-btn inline-flex items-center justify-center gap-2 h-11 min-h-[44px] px-4 rounded-xl border border-white/12 hover:border-white/25 bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 hover:text-white font-sans text-xs font-semibold transition-all"
+              aria-label="Copy email address">
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+              <span>Copy</span>
+            </button>
+            <a id="contact-email-btn" href="mailto:arullsyh11@gmail.com"
+              class="contact-action-btn inline-flex items-center justify-center gap-2 h-11 min-h-[44px] px-5 rounded-xl bg-white hover:bg-slate-200 text-black font-sans text-xs font-semibold transition-all">
+              <span>Send Email</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="font-sans text-xs text-slate-500 space-y-1">
+          <p id="contact-response-time"><!-- Populated from data.js --></p>
+          <p id="contact-location-note"><!-- Populated from data.js --></p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ========================================================================
+         7. FOOTER
+         ======================================================================== -->
+    <footer class="border-t border-white/[0.08] bg-[#08080A] py-10 px-4 sm:px-6">
+      <div
+        class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <p id="footer-copyright"><!-- Populated from data.js --></p>
+        <p id="footer-built-with"><!-- Populated from data.js --></p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ==========================================================================
+       8. FLOATING QUICK CONTACT PILL (Bottom Right)
+       ========================================================================== -->
+  <div id="floating-contact-container"
+    class="quick-contact-container fixed bottom-6 right-6 z-40 flex flex-col items-end">
+    <!-- Popover Menu -->
+    <div id="floating-contact-menu"
+      class="hidden mb-3 p-2 rounded-xl border border-white/10 bg-[#0E0E11]/95 backdrop-blur-md shadow-2xl w-48 transition-all">
+      <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1 border-b border-white/5 mb-1">
+        Quick Connect
+      </div>
+      <div id="floating-contact-options" class="space-y-0.5">
+        <!-- Populated from data.js -->
+      </div>
+    </div>
+
+    <!-- Floating Trigger Pill Button -->
+    <button type="button" id="floating-contact-trigger"
+      class="quick-contact-trigger inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-[#141418] hover:bg-[#1c1c22] text-white shadow-xl hover:border-white/30 transition-all duration-150 font-sans font-medium text-xs focus-visible:outline-none"
+      aria-expanded="false" aria-label="Open quick contact menu">
+      <span class="quick-contact-status w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
+      <svg class="quick-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+        <path d="m3 7 9 6 9-6"></path>
+      </svg>
+      <span class="quick-contact-label">Quick Contact</span>
+    </button>
+  </div>
+
+  <!-- ==========================================================================
+       9. PROJECT DETAILS MODAL DIALOG (Accessible WCAG Modal)
+       ========================================================================== -->
+  <div id="project-modal" class="fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4 hidden"
+    role="dialog" aria-modal="true" aria-label="Project Details">
+    <div
+      class="relative w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/15 bg-[#0E0E12] shadow-2xl text-left modal-dialog-animate"
+      onclick="event.stopPropagation()">
+      <div id="project-modal-content" class="max-h-[90vh] overflow-y-auto p-5 sm:p-8">
+        <!-- Populated dynamically by openProjectModal() in app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-notification" class="toast-notice" role="status" aria-live="polite"></div>
+
+  <!-- Load Separate Data Configuration & Application Logic -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
