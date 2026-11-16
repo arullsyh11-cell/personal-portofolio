@@ -140,6 +140,14 @@ const portfolioData = {
           title: "Atmosphere & Depth Compositing Pass",
           image: "assets/images/cinematic-lrc-3.jpg",
         },
+        {
+          title: "The Beauty of Ancient Sculptures",
+          image: "assets/images/lighting.png"
+        },
+        {
+          title: "Capturing Timeless Moments",
+          image: "assets/images/Camera.png"
+        },
       ],
       shortDescription:
         "Eksplorasi pencahayaan sinematik (lighting), material look development, dan compositing untuk lingkungan 3D realistis menggunakan color pipeline ACEScg.",
@@ -171,6 +179,22 @@ const portfolioData = {
           title: "Full Scene Assembly & Turntable Render",
           image: "assets/images/Generalist-3d-3.jpg",
         },
+        {
+          title: "Engineering Heavy Machinery",
+          image: "assets/images/Generalist-3d-7.png",
+        },
+        {
+          title: "Precision in Every Detail",
+          image: "assets/images/weapon-1.png",
+        },
+        {
+          title: "Built for Heavy Operations",
+          image: "assets/images/Generalist-3d-5.png",
+        },
+        {
+          title: "Exploring Mechanical Complexity",
+          image: "assets/images/Generalist-3d-6.png"
+        }
       ],
       shortDescription:
         "Pemodelan 3D hard surface dengan topologi quad bersih, pemetaan UV tanpa distorsi, tekstur PBR 4K, dan integrasi assembly aset ke dalam scene utuh.",
