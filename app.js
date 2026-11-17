@@ -227,11 +227,10 @@ function renderProjectCategoryFilters() {
         <button 
           type="button" 
           data-category="${cat}"
-          class="category-filter-btn border ${
-            isActive
-              ? "bg-white text-black border-white shadow-sm"
-              : "bg-transparent text-slate-400 border-transparent hover:text-white hover:bg-white/[0.05]"
-          }"
+          class="category-filter-btn border ${isActive
+          ? "bg-white text-black border-white shadow-sm"
+          : "bg-transparent text-slate-400 border-transparent hover:text-white hover:bg-white/[0.05]"
+        }"
           aria-pressed="${isActive}">
           ${cat}
         </button>
@@ -272,13 +271,12 @@ function renderStackedDeckHTML(project, deckScopeId) {
           </div>
           <div class="stack-window-body">
             <img src="${item.image}" alt="${item.title}" width="800" height="450" loading="lazy" />
-            ${
-              item.subtitle
-                ? `<div class="stack-window-caption">
+            ${item.subtitle
+          ? `<div class="stack-window-caption">
                     <span class="text-[11px] font-medium text-slate-200 truncate">${item.subtitle}</span>
                   </div>`
-                : ""
-            }
+          : ""
+        }
           </div>
         </div>
       `;
@@ -460,7 +458,7 @@ function renderProjectCards() {
       const mediaPreviewMarkup = hasStack
         ? renderStackedDeckHTML(project, "card")
         : project.image
-        ? `
+          ? `
           <div class="relative w-full aspect-video mb-5 rounded-xl overflow-hidden border border-white/10 bg-[#121216] group-hover:border-white/20 transition-all">
             <img 
               src="${project.image}" 
@@ -472,31 +470,29 @@ function renderProjectCards() {
             />
           </div>
         `
-        : "";
+          : "";
 
       const footerActionsMarkup = hasStack
         ? ""
         : `
           <div class="flex items-center gap-2">
-            ${
-              project.githubUrl
-                ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" 
+            ${project.githubUrl
+          ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" 
                      class="w-9 h-9 min-h-[38px] inline-flex items-center justify-center text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03]"
                      aria-label="View source code on GitHub">
                     ${icons.github}
                   </a>`
-                : ""
-            }
-            ${
-              project.liveUrl
-                ? `<a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" 
+          : ""
+        }
+            ${project.liveUrl
+          ? `<a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" 
                      class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
                      aria-label="Open live project preview">
                     <span>Live Demo</span>
                     ${icons.externalLink}
                   </a>`
-                : ""
-            }
+          : ""
+        }
           </div>
         `;
 
@@ -508,13 +504,12 @@ function renderProjectCards() {
               <span class="font-sans text-xs font-medium text-slate-300 bg-white/[0.04] border border-white/10 px-3 py-1 rounded-full">
                 ${project.category}
               </span>
-              ${
-                project.badge
-                  ? `<span class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
+              ${project.badge
+          ? `<span class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
                       ${project.badge}
                     </span>`
-                  : ""
-              }
+          : ""
+        }
             </div>
 
             ${mediaPreviewMarkup}
@@ -529,13 +524,12 @@ function renderProjectCards() {
               ${project.shortDescription}
             </p>
 
-            ${
-              project.metrics
-                ? `<div class="mb-5 inline-flex items-center gap-2 font-sans text-xs font-medium text-slate-300 border-l-2 border-white/25 pl-3 py-0.5">
+            ${project.metrics
+          ? `<div class="mb-5 inline-flex items-center gap-2 font-sans text-xs font-medium text-slate-300 border-l-2 border-white/25 pl-3 py-0.5">
                     ${project.metrics}
                   </div>`
-                : ""
-            }
+          : ""
+        }
           </div>
 
           <div>
@@ -634,14 +628,14 @@ function initSkillsSection() {
         </h3>
         <div class="flex flex-wrap gap-2">
           ${group.items
-            .map(
-              (skill) => `
+          .map(
+            (skill) => `
               <span class="font-sans text-xs font-medium px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/5 text-slate-200 hover:text-white hover:border-white/20 hover:bg-white/[0.06] transition-all duration-150">
                 ${skill}
               </span>
             `
-            )
-            .join("")}
+          )
+          .join("")}
         </div>
       </div>
     `
@@ -677,27 +671,27 @@ function initExperienceSection() {
 
         <ul class="space-y-2 mb-4 text-xs md:text-sm text-slate-300">
           ${exp.description
-            .map(
-              (point) => `
+          .map(
+            (point) => `
               <li class="flex items-start gap-2.5 leading-relaxed">
                 <span class="text-slate-500 mt-1 shrink-0">›</span>
                 <span>${point}</span>
               </li>
             `
-            )
-            .join("")}
+          )
+          .join("")}
         </ul>
 
         <div class="flex flex-wrap gap-1.5">
           ${exp.skillsUsed
-            .map(
-              (s) => `
+          .map(
+            (s) => `
               <span class="tech-pill">
                 ${s}
               </span>
             `
-            )
-            .join("")}
+          )
+          .join("")}
         </div>
       </div>
     `
@@ -912,7 +906,7 @@ function openProjectModal(projectId) {
   const modalMediaMarkup = hasStack
     ? renderStackedDeckHTML(project, "modal")
     : project.image
-    ? `
+      ? `
       <div class="relative w-full aspect-video mb-6 rounded-xl overflow-hidden border border-white/10 bg-[#121216]">
         <img 
           src="${project.image}" 
@@ -923,28 +917,26 @@ function openProjectModal(projectId) {
         />
       </div>
     `
-    : "";
+      : "";
 
   const modalFooterMarkup = hasStack
     ? ""
     : `
       <div class="modal-project-actions pt-5 border-t border-white/10 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
-        ${
-          project.githubUrl
-            ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" 
+        ${project.githubUrl
+      ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" 
                  class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors">
                 ${icons.github} <span class="ml-2">Source Code</span>
               </a>`
-            : ""
-        }
-        ${
-          project.liveUrl
-            ? `<a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" 
+      : ""
+    }
+        ${project.liveUrl
+      ? `<a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" 
                  class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
                 <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
               </a>`
-            : ""
-        }
+      : ""
+    }
       </div>
     `;
 
@@ -955,13 +947,12 @@ function openProjectModal(projectId) {
         <span class="font-sans text-xs font-medium text-slate-300 bg-white/[0.05] border border-white/10 px-3 py-1 rounded-full">
           ${project.category}
         </span>
-        ${
-          project.badge
-            ? `<span class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
+        ${project.badge
+      ? `<span class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
                 ${project.badge}
               </span>`
-            : ""
-        }
+      : ""
+    }
       </div>
 
       <button type="button" id="project-modal-close" class="modal-close-button" aria-label="Close project details dialog">
@@ -979,13 +970,12 @@ function openProjectModal(projectId) {
       ${project.fullDescription || project.shortDescription}
     </p>
 
-    ${
-      project.metrics
-        ? `<div class="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs sm:text-sm text-slate-200 font-medium">
+    ${project.metrics
+      ? `<div class="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs sm:text-sm text-slate-200 font-medium">
             <span class="text-slate-400 block text-[11px] uppercase tracking-wider mb-1">Key Highlight</span>
             ${project.metrics}
           </div>`
-        : ""
+      : ""
     }
 
     <div class="mb-6">

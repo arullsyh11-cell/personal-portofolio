@@ -92,14 +92,14 @@ const portfolioData = {
       title: "GYMFlow: Fitness & Workout Tracking Web App",
       category: "Web Apps",
       featured: true, // Proyek unggulan mendapatkan ukuran kartu yang lebih luas
-      badge: "React Web App",
+      badge: "Fitness Web App",
       image: "assets/images/gymflow.png", // Ganti dengan file gambar Anda (misal: assets/images/gymflow.png)
       shortDescription:
         "Aplikasi web kebugaran untuk pelacakan volume latihan gym harian, visualisasi grafik progres mingguan, dan manajemen rutinitas latihan berbasis React JS.",
       fullDescription:
         "GYMFlow dirancang untuk mempermudah pencatatan sesi gym harian tanpa hambatan input yang rumit. Dibangun menggunakan React JS dengan arsitektur komponen modular, visualisasi grafik performa latihan, dan manajemen state reaktif untuk pelacakan volume beban latihan secara real-time.",
       techStack: ["React JS", "Tailwind CSS", "JavaScript ESNext", "Chart.js", "LocalStorage API"],
-      githubUrl: "https://github.com",
+      githubUrl: "https://github.com/arullsyh11-cell/arullsyh11-cell.github.io",
       liveUrl: "https://gymflow.my.id/",
       metrics: "State-driven workout log with instant responsive telemetry",
     },
@@ -115,7 +115,7 @@ const portfolioData = {
       fullDescription:
         "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer. Menggunakan React JS untuk render antarmuka yang cepat, fluid drag-and-drop, dan antarmuka monokrom yang bebas dari distraksi.",
       techStack: ["React JS", "Tailwind CSS", "React Context", "Vite", "Web Storage"],
-      githubUrl: "https://github.com",
+      githubUrl: "https://github.com/arullsyh11-cell/ORBIT",
       liveUrl: "https://dayflow-flax.vercel.app/",
       metrics: "Sub-100ms interaction latency with zero UI bloat",
     },
@@ -125,28 +125,28 @@ const portfolioData = {
       category: "3D & LRC",
       featured: true,
       badge: "3D LRC Production",
-      image: "assets/images/cinematic-lrc.jpg",
+      image: "assets/images/cinematic-lrc.webp",
       // Daftar karya portofolio 3D & LRC yang tampil bertumpuk (Stacked Deck) dan berganti saat digeser / di-scroll:
       portfolioStack: [
         {
           title: "Final ACEScg Beauty Composite",
-          image: "assets/images/cinematic-lrc.jpg",
+          image: "assets/images/cinematic-lrc.webp",
         },
         {
           title: "Multi-Pass Lighting & Shader Breakdown",
-          image: "assets/images/cinematic-lrc-2.jpg",
+          image: "assets/images/cinematic-lrc-2.webp",
         },
         {
           title: "Atmosphere & Depth Compositing Pass",
-          image: "assets/images/cinematic-lrc-3.jpg",
+          image: "assets/images/cinematic-lrc-3.webp",
         },
         {
           title: "The Beauty of Ancient Sculptures",
-          image: "assets/images/lighting.png"
+          image: "assets/images/lighting.webp"
         },
         {
           title: "Capturing Timeless Moments",
-          image: "assets/images/Camera.png"
+          image: "assets/images/Camera.webp"
         },
       ],
       shortDescription:
@@ -164,36 +164,36 @@ const portfolioData = {
       category: "3D & LRC",
       featured: false,
       badge: "3D Generalist",
-      image: "assets/images/Generalist-3d.jpg",
+      image: "assets/images/Generalist-3d.webp",
       // Daftar karya portofolio 3D Generalist yang tampil bertumpuk (Stacked Deck) dan berganti saat digeser / di-scroll:
       portfolioStack: [
         {
           title: "Hard Surface SubD & Quad Topology",
-          image: "assets/images/Generalist-3d-4.jpg",
+          image: "assets/images/Generalist-3d-4.webp",
         },
         {
           title: "4K PBR Metallic & Weathering LookDev",
-          image: "assets/images/Generalist-3d-2.jpg",
+          image: "assets/images/Generalist-3d-2.webp",
         },
         {
           title: "Full Scene Assembly & Turntable Render",
-          image: "assets/images/Generalist-3d-3.jpg",
+          image: "assets/images/Generalist-3d-3.webp",
         },
         {
           title: "Engineering Heavy Machinery",
-          image: "assets/images/Generalist-3d-7.png",
+          image: "assets/images/Generalist-3d-7.webp",
         },
         {
           title: "Precision in Every Detail",
-          image: "assets/images/weapon-1.png",
+          image: "assets/images/weapon-1.webp",
         },
         {
           title: "Built for Heavy Operations",
-          image: "assets/images/Generalist-3d-5.png",
+          image: "assets/images/Generalist-3d-5.webp",
         },
         {
           title: "Exploring Mechanical Complexity",
-          image: "assets/images/Generalist-3d-6.png"
+          image: "assets/images/Generalist-3d-6.webp"
         }
       ],
       shortDescription:
