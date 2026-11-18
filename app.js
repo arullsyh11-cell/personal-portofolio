@@ -100,7 +100,7 @@ function initBrandAndNav() {
     navContainer.innerHTML = portfolioData.navigation
       .map(
         (item, idx) => `
-        <a href="${item.href}" class="nav-pill-link ${idx === 0 ? "active" : ""} text-[11px] sm:text-sm font-medium text-slate-300 hover:text-white px-2.5 sm:px-3.5 py-1.5 rounded-full transition-all duration-150 focus-visible:outline-none">
+        <a href="${item.href}" class="nav-pill-link ${idx === 0 ? "active" : ""} text-[11px] sm:text-[13px] font-medium px-2 sm:px-3.5 py-1.5 rounded-full transition-colors duration-150 focus-visible:outline-none">
           ${item.label}
         </a>
       `
@@ -137,12 +137,10 @@ function initBrandAndNav() {
         .writeText(userEmail)
         .then(() => {
           const originalHTML = emailPillBtn.innerHTML;
-          emailPillBtn.innerHTML = `${icons.check} <span class="font-sans text-xs sm:text-sm text-emerald-800 font-semibold ml-1">Copied!</span>`;
-          emailPillBtn.classList.add("bg-emerald-100");
+          emailPillBtn.innerHTML = `${icons.check} <span class="font-sans text-xs sm:text-[13px] text-emerald-300 font-semibold ml-1">Copied!</span>`;
           showToast("Email address copied to clipboard!");
           setTimeout(() => {
             emailPillBtn.innerHTML = originalHTML;
-            emailPillBtn.classList.remove("bg-emerald-100");
           }, 2000);
         })
         .catch(() => {
@@ -248,7 +246,127 @@ function renderProjectCategoryFilters() {
 }
 
 /**
- * Menghasilkan markup 3D Stacked Window Deck (seperti referensi Gambar 2 & 3)
+ * Mengambil metadata aktif untuk project (mendukung perubahan judul, deskripsi,
+ * metrik, techStack, dan link per slide di portfolioStack)
+ */
+function getActiveProjectVariant(project) {
+  const stack = Array.isArray(project.portfolioStack) ? project.portfolioStack : [];
+  const currentIdx = projectStackState[project.id] || 0;
+  const activeItem = stack[currentIdx] || null;
+
+  return {
+    title: (activeItem && activeItem.projectTitle) || project.title,
+    badge: (activeItem && activeItem.badge) || project.badge,
+    shortDescription: (activeItem && activeItem.shortDescription) || project.shortDescription,
+    fullDescription:
+      (activeItem && activeItem.fullDescription) ||
+      (activeItem && activeItem.shortDescription) ||
+      project.fullDescription ||
+      project.shortDescription,
+    metrics:
+      activeItem && activeItem.metrics !== undefined ? activeItem.metrics : project.metrics,
+    techStack:
+      activeItem && Array.isArray(activeItem.techStack)
+        ? activeItem.techStack
+        : project.techStack,
+    githubUrl:
+      activeItem && activeItem.githubUrl !== undefined ? activeItem.githubUrl : project.githubUrl,
+    liveUrl:
+      activeItem && activeItem.liveUrl !== undefined ? activeItem.liveUrl : project.liveUrl,
+  };
+}
+
+/**
+ * Mengecek apakah URL masih berupa placeholder yang belum diisi ("#")
+ */
+function isPendingUrl(url) {
+  return typeof url === "string" && url.trim() === "#";
+}
+
+/**
+ * Menghasilkan tombol aksi GitHub & Live Demo pada footer kartu proyek
+ */
+function renderProjectCardLinksHTML(variant) {
+  if (!variant.githubUrl && !variant.liveUrl) return "";
+
+  const githubHTML = variant.githubUrl
+    ? isPendingUrl(variant.githubUrl)
+      ? `<button type="button" data-pending-link="Source Code"
+             class="inline-flex items-center gap-1.5 px-2.5 py-2 min-h-[38px] text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03] font-sans text-[11px] font-medium"
+             aria-label="Source Code"
+             title="Source Code">
+            ${icons.github}
+          </button>`
+      : `<a href="${variant.githubUrl}" target="_blank" rel="noopener noreferrer" 
+             class="w-9 h-9 min-h-[38px] inline-flex items-center justify-center text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03]"
+             aria-label="View source code on GitHub">
+            ${icons.github}
+          </a>`
+    : "";
+
+  const liveHTML = variant.liveUrl
+    ? isPendingUrl(variant.liveUrl)
+      ? `<button type="button" data-pending-link="Live Demo"
+             class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-slate-200 bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
+             aria-label="Live Demo"
+             title="Live Demo">
+            <span>Live Demo</span>
+            ${icons.externalLink}
+          </button>`
+      : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
+             class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
+             aria-label="Open live project preview">
+            <span>Live Demo</span>
+            ${icons.externalLink}
+          </a>`
+    : "";
+
+  return `${githubHTML}${liveHTML}`;
+}
+
+/**
+ * Menghasilkan tombol aksi GitHub & Live Demo di footer modal proyek
+ */
+function renderModalActionsHTML(variant) {
+  if (!variant.githubUrl && !variant.liveUrl) return "";
+
+  const githubHTML = variant.githubUrl
+    ? isPendingUrl(variant.githubUrl)
+      ? `<button type="button" data-pending-link="Source Code"
+             class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors"
+             aria-label="Source Code">
+            ${icons.github} <span class="ml-2">Source Code</span>
+          </button>`
+      : `<a href="${variant.githubUrl}" target="_blank" rel="noopener noreferrer" 
+             class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors">
+            ${icons.github} <span class="ml-2">Source Code</span>
+          </a>`
+    : "";
+
+  const liveHTML = variant.liveUrl
+    ? isPendingUrl(variant.liveUrl)
+      ? `<button type="button" data-pending-link="Visit Live Demo"
+             class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors"
+             aria-label="Visit Live Demo">
+            <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
+          </button>`
+      : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
+             class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
+            <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
+          </a>`
+    : "";
+
+  return `
+    <div class="pt-5 border-t border-white/10 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+      ${githubHTML}
+      ${liveHTML}
+    </div>
+  `;
+}
+
+
+/**
+ * Menghasilkan markup Interactive Stacked Window Deck (seperti referensi Gambar 3)
  */
 function renderStackedDeckHTML(project, deckScopeId) {
   const stack = project.portfolioStack || [];
@@ -284,7 +402,7 @@ function renderStackedDeckHTML(project, deckScopeId) {
     .join("");
 
   return `
-    <div class="stack-showcase-wrapper" data-deck-project="${project.id}" data-deck-scope="${deckScopeId}" aria-label="Interactive 3D Portfolio Stack. Scroll or swipe to view next artwork.">
+    <div class="stack-showcase-wrapper" tabindex="0" data-deck-project="${project.id}" data-deck-scope="${deckScopeId}" aria-label="Interactive portfolio stack for ${project.title}. Scroll, swipe, click, or use arrow keys to switch works.">
       <div class="stack-deck-stage">
         ${cardsMarkup}
       </div>
@@ -293,7 +411,8 @@ function renderStackedDeckHTML(project, deckScopeId) {
 }
 
 /**
- * Memperbarui posisi kartu pada seluruh deck untuk projectId tertentu
+ * Memperbarui posisi kartu pada deck serta menyinkronkan judul, deskripsi, metrik,
+ * tech stack, dan tautan aksi untuk projectId tertentu
  */
 function stepProjectStack(projectId, delta = 1) {
   const project = portfolioData.projects.find((p) => p.id === projectId);
@@ -303,6 +422,8 @@ function stepProjectStack(projectId, delta = 1) {
   const current = projectStackState[projectId] || 0;
   const nextIndex = (current + delta + total) % total;
   projectStackState[projectId] = nextIndex;
+
+  const variant = getActiveProjectVariant(project);
 
   // Update semua deck instance (baik di kartu maupun di dalam modal jika sedang terbuka)
   const wrappers = document.querySelectorAll(`[data-deck-project="${projectId}"]`);
@@ -316,15 +437,77 @@ function stepProjectStack(projectId, delta = 1) {
     });
   });
 
-  // Update counter text di footer kartu & modal
+  // Update counter text di footer kartu & modal (jika ada)
   const counters = document.querySelectorAll(`[data-stack-counter="${projectId}"]`);
   counters.forEach((counterEl) => {
     counterEl.textContent = `${nextIndex + 1} / ${total}`;
   });
+
+  // Sinkronkan konten teks & tautan pada kartu proyek
+  const cardBadge = document.querySelector(`[data-project-badge="${projectId}"]`);
+  const cardTitle = document.querySelector(`[data-project-title="${projectId}"]`);
+  const cardDesc = document.querySelector(`[data-project-desc="${projectId}"]`);
+  const cardMetrics = document.querySelector(`[data-project-metrics="${projectId}"]`);
+  const cardTech = document.querySelector(`[data-project-tech="${projectId}"]`);
+  const cardLinks = document.querySelector(`[data-project-links="${projectId}"]`);
+  const dynamicBlock = document.querySelector(`[data-project-dynamic="${projectId}"]`);
+
+  if (cardBadge && variant.badge) cardBadge.textContent = variant.badge;
+  if (cardTitle) cardTitle.textContent = variant.title;
+  if (cardDesc) cardDesc.textContent = variant.shortDescription;
+  if (cardMetrics) {
+    if (variant.metrics) {
+      cardMetrics.textContent = variant.metrics;
+      cardMetrics.classList.remove("hidden");
+    } else {
+      cardMetrics.classList.add("hidden");
+    }
+  }
+  if (cardTech) {
+    cardTech.innerHTML = variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("");
+  }
+  if (cardLinks) {
+    cardLinks.innerHTML = renderProjectCardLinksHTML(variant);
+  }
+  if (dynamicBlock) {
+    dynamicBlock.classList.remove("stack-content-swap");
+    void dynamicBlock.offsetWidth;
+    dynamicBlock.classList.add("stack-content-swap");
+  }
+
+  // Sinkronkan konten di dalam Modal jika modal untuk proyek ini sedang terbuka
+  const modal = document.getElementById("project-modal");
+  if (modal && !modal.classList.contains("hidden")) {
+    const modalBadge = document.querySelector(`[data-modal-badge="${projectId}"]`);
+    const modalTitle = document.querySelector(`[data-modal-title="${projectId}"]`);
+    const modalDesc = document.querySelector(`[data-modal-desc="${projectId}"]`);
+    const modalMetricsBox = document.querySelector(`[data-modal-metrics="${projectId}"]`);
+    const modalMetricsText = document.querySelector(`[data-modal-metrics-text="${projectId}"]`);
+    const modalTech = document.querySelector(`[data-modal-tech="${projectId}"]`);
+    const modalLinks = document.querySelector(`[data-modal-links="${projectId}"]`);
+
+    if (modalBadge && variant.badge) modalBadge.textContent = variant.badge;
+    if (modalTitle) modalTitle.textContent = variant.title;
+    if (modalDesc) modalDesc.textContent = variant.fullDescription;
+    if (modalMetricsBox && modalMetricsText) {
+      if (variant.metrics) {
+        modalMetricsText.textContent = variant.metrics;
+        modalMetricsBox.classList.remove("hidden");
+      } else {
+        modalMetricsBox.classList.add("hidden");
+      }
+    }
+    if (modalTech) {
+      modalTech.innerHTML = variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("");
+    }
+    if (modalLinks) {
+      modalLinks.innerHTML = renderModalActionsHTML(variant);
+    }
+  }
 }
 
 /**
- * Mengaktifkan interaksi Scroll (Wheel), Geser (Swipe / Pointer Drag), dan Klik pada 3D Stacked Deck
+ * Mengaktifkan interaksi Scroll (Wheel), Geser (Swipe / Pointer Drag), Klik, & Keyboard pada Stacked Deck
  */
 function attachStackDeckInteractions(rootElement = document) {
   const wrappers = rootElement.querySelectorAll(".stack-showcase-wrapper");
@@ -395,9 +578,20 @@ function attachStackDeckInteractions(rootElement = document) {
       startY = null;
       isDragging = false;
     });
+
+    // 3. Interaksi Keyboard (R-32 Accessibility)
+    wrapper.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        stepProjectStack(projectId, 1);
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        stepProjectStack(projectId, -1);
+      }
+    });
   });
 
-  // Tombol Prev / Next untuk 3D Stack
+  // Tombol Prev / Next jika tersedia
   rootElement.querySelectorAll("[data-stack-action]").forEach((btn) => {
     if (btn.dataset.bound === "true") return;
     btn.dataset.bound = "true";
@@ -452,8 +646,7 @@ function renderProjectCards() {
       const isFeatured = project.featured;
       const colSpanClass = isFeatured ? "md:col-span-2 lg:col-span-2" : "col-span-1";
       const hasStack = Array.isArray(project.portfolioStack) && project.portfolioStack.length > 0;
-      const currentIdx = projectStackState[project.id] || 0;
-      const totalSlides = hasStack ? project.portfolioStack.length : 0;
+      const variant = getActiveProjectVariant(project);
 
       const mediaPreviewMarkup = hasStack
         ? renderStackedDeckHTML(project, "card")
@@ -472,29 +665,7 @@ function renderProjectCards() {
         `
           : "";
 
-      const footerActionsMarkup = hasStack
-        ? ""
-        : `
-          <div class="flex items-center gap-2">
-            ${project.githubUrl
-          ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" 
-                     class="w-9 h-9 min-h-[38px] inline-flex items-center justify-center text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03]"
-                     aria-label="View source code on GitHub">
-                    ${icons.github}
-                  </a>`
-          : ""
-        }
-            ${project.liveUrl
-          ? `<a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" 
-                     class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-                     aria-label="Open live project preview">
-                    <span>Live Demo</span>
-                    ${icons.externalLink}
-                  </a>`
-          : ""
-        }
-          </div>
-        `;
+      const footerLinksMarkup = renderProjectCardLinksHTML(variant);
 
       return `
         <article class="card-project rounded-2xl p-6 flex flex-col justify-between ${colSpanClass} group relative">
@@ -504,9 +675,9 @@ function renderProjectCards() {
               <span class="font-sans text-xs font-medium text-slate-300 bg-white/[0.04] border border-white/10 px-3 py-1 rounded-full">
                 ${project.category}
               </span>
-              ${project.badge
-          ? `<span class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
-                      ${project.badge}
+              ${variant.badge
+          ? `<span data-project-badge="${project.id}" class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
+                      ${variant.badge}
                     </span>`
           : ""
         }
@@ -514,28 +685,28 @@ function renderProjectCards() {
 
             ${mediaPreviewMarkup}
 
-            <!-- Title -->
-            <h3 class="text-lg md:text-xl font-bold text-white tracking-tight mb-2.5 group-hover:text-slate-100 transition-colors">
-              ${project.title}
-            </h3>
+            <div data-project-dynamic="${project.id}">
+              <!-- Title -->
+              <h3 data-project-title="${project.id}" class="text-lg md:text-xl font-bold text-white tracking-tight mb-2.5 group-hover:text-slate-100 transition-colors">
+                ${variant.title}
+              </h3>
 
-            <!-- Description -->
-            <p class="text-sm text-slate-400 leading-relaxed mb-5">
-              ${project.shortDescription}
-            </p>
+              <!-- Description -->
+              <p data-project-desc="${project.id}" class="text-sm text-slate-400 leading-relaxed mb-5">
+                ${variant.shortDescription}
+              </p>
 
-            ${project.metrics
-          ? `<div class="mb-5 inline-flex items-center gap-2 font-sans text-xs font-medium text-slate-300 border-l-2 border-white/25 pl-3 py-0.5">
-                    ${project.metrics}
-                  </div>`
-          : ""
-        }
+              <!-- Metrics -->
+              <div data-project-metrics="${project.id}" class="mb-5 inline-flex items-center gap-2 font-sans text-xs font-medium text-slate-300 border-l-2 border-white/25 pl-3 py-0.5 ${variant.metrics ? "" : "hidden"}">
+                ${variant.metrics || ""}
+              </div>
+            </div>
           </div>
 
           <div>
             <!-- Tech Stack Pills -->
-            <div class="flex flex-wrap gap-1.5 mb-6">
-              ${project.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("")}
+            <div data-project-tech="${project.id}" class="flex flex-wrap gap-1.5 mb-6">
+              ${variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("")}
             </div>
 
             <!-- Actions Footer -->
@@ -548,7 +719,9 @@ function renderProjectCards() {
                 <span>Details</span>
               </button>
 
-              ${footerActionsMarkup}
+              <div data-project-links="${project.id}" class="flex items-center gap-2">
+                ${footerLinksMarkup}
+              </div>
             </div>
           </div>
         </article>
@@ -564,7 +737,7 @@ function renderProjectCards() {
     });
   });
 
-  // Attach 3D stacked deck interactions
+  // Attach interactive stacked deck interactions
   attachStackDeckInteractions(gridContainer);
 
   // Attach interactive spotlight hover to cards
@@ -900,8 +1073,7 @@ function openProjectModal(projectId) {
   if (!project || !modal || !modalBody) return;
 
   const hasStack = Array.isArray(project.portfolioStack) && project.portfolioStack.length > 0;
-  const currentIdx = projectStackState[project.id] || 0;
-  const totalSlides = hasStack ? project.portfolioStack.length : 0;
+  const variant = getActiveProjectVariant(project);
 
   const modalMediaMarkup = hasStack
     ? renderStackedDeckHTML(project, "modal")
@@ -910,7 +1082,7 @@ function openProjectModal(projectId) {
       <div class="relative w-full aspect-video mb-6 rounded-xl overflow-hidden border border-white/10 bg-[#121216]">
         <img 
           src="${project.image}" 
-          alt="${project.title} preview" 
+          alt="${variant.title} preview" 
           width="800" 
           height="450" 
           class="w-full h-full object-cover" 
@@ -919,26 +1091,11 @@ function openProjectModal(projectId) {
     `
       : "";
 
-  const modalFooterMarkup = hasStack
-    ? ""
-    : `
-      <div class="modal-project-actions pt-5 border-t border-white/10 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
-        ${project.githubUrl
-      ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" 
-                 class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors">
-                ${icons.github} <span class="ml-2">Source Code</span>
-              </a>`
-      : ""
-    }
-        ${project.liveUrl
-      ? `<a href="${project.liveUrl}" target="_blank" rel="noopener noreferrer" 
-                 class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
-                <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
-              </a>`
-      : ""
-    }
-      </div>
-    `;
+  const modalFooterMarkup = `
+    <div data-modal-links="${project.id}" class="modal-project-actions">
+      ${renderModalActionsHTML(variant)}
+    </div>
+  `;
 
   modalBody.innerHTML = `
     <!-- Dedicated Header Row: Badges on Left, Close Button on Right (Zero Overlap) -->
@@ -947,9 +1104,9 @@ function openProjectModal(projectId) {
         <span class="font-sans text-xs font-medium text-slate-300 bg-white/[0.05] border border-white/10 px-3 py-1 rounded-full">
           ${project.category}
         </span>
-        ${project.badge
-      ? `<span class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
-                ${project.badge}
+        ${variant.badge
+      ? `<span data-modal-badge="${project.id}" class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
+                ${variant.badge}
               </span>`
       : ""
     }
@@ -962,26 +1119,23 @@ function openProjectModal(projectId) {
 
     ${modalMediaMarkup}
 
-    <h2 class="text-xl md:text-2xl font-bold text-white tracking-tight mb-3">
-      ${project.title}
+    <h2 data-modal-title="${project.id}" class="text-xl md:text-2xl font-bold text-white tracking-tight mb-3">
+      ${variant.title}
     </h2>
 
-    <p class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
-      ${project.fullDescription || project.shortDescription}
+    <p data-modal-desc="${project.id}" class="text-sm sm:text-base text-slate-300 leading-relaxed mb-6">
+      ${variant.fullDescription}
     </p>
 
-    ${project.metrics
-      ? `<div class="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs sm:text-sm text-slate-200 font-medium">
-            <span class="text-slate-400 block text-[11px] uppercase tracking-wider mb-1">Key Highlight</span>
-            ${project.metrics}
-          </div>`
-      : ""
-    }
+    <div data-modal-metrics="${project.id}" class="mb-6 p-4 rounded-xl bg-white/[0.03] border border-white/10 text-xs sm:text-sm text-slate-200 font-medium ${variant.metrics ? "" : "hidden"}">
+      <span class="text-slate-400 block text-[11px] uppercase tracking-wider mb-1">Key Highlight</span>
+      <span data-modal-metrics-text="${project.id}">${variant.metrics || ""}</span>
+    </div>
 
     <div class="mb-6">
       <h4 class="font-sans text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2.5">Technologies & Pipeline</h4>
-      <div class="flex flex-wrap gap-1.5">
-        ${project.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("")}
+      <div data-modal-tech="${project.id}" class="flex flex-wrap gap-1.5">
+        ${variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("")}
       </div>
     </div>
 

@@ -46,6 +46,7 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -151,7 +152,7 @@ body {
   margin-top: 0.75rem;
 }
 
-.hero-text-column > div:has(#hero-secondary-cta) {
+.hero-text-column>div:has(#hero-secondary-cta) {
   grid-column: 1 / -1;
   grid-row: 4;
 }
@@ -218,36 +219,72 @@ body {
 }
 
 /* ==============================================================================
-   FLOATING PILL NAVBAR CAPSULE (Liquid Glass Aesthetic)
-   Translucent liquid dark glass with deep optical refraction & specular sheen.
+   FLOATING PILL NAVBAR CAPSULE (Apple-Inspired Pearl Liquid Glass)
+   High-opacity (86%-92%) frosted crystal glass: optical refraction + specular rim
+   without excessive transparency, preserving crisp contrast over all sections.
    ============================================================================== */
 .floating-capsule {
-  background: rgba(14, 14, 18, 0.68);
-  background-image: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.03) 40%,
-      rgba(0, 0, 0, 0.15) 100%);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.94) 0%,
+      rgba(244, 246, 250, 0.87) 52%,
+      rgba(235, 239, 246, 0.9) 100%);
+  backdrop-filter: blur(28px) saturate(180%) brightness(1.06);
+  -webkit-backdrop-filter: blur(28px) saturate(180%) brightness(1.06);
+  border: 1px solid rgba(255, 255, 255, 0.78);
   box-shadow:
-    0 20px 50px -10px rgba(0, 0, 0, 0.75),
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    0 20px 44px -10px rgba(0, 0, 0, 0.72),
+    0 6px 16px -4px rgba(0, 0, 0, 0.45),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.98),
+    inset 0 -1.5px 2px rgba(255, 255, 255, 0.55),
+    inset 1px 0 1px rgba(255, 255, 255, 0.6),
+    inset -1px 0 1px rgba(255, 255, 255, 0.6);
+  transition: box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  border-radius: 9999px;
 }
 
 .floating-capsule.scrolled {
-  background: rgba(10, 10, 14, 0.85);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(242, 245, 249, 0.89) 52%,
+      rgba(232, 237, 245, 0.92) 100%);
+  border-color: rgba(255, 255, 255, 0.86);
   box-shadow:
-    0 24px 60px -12px rgba(0, 0, 0, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.6);
+    0 24px 52px -10px rgba(0, 0, 0, 0.85),
+    0 8px 22px -4px rgba(0, 0, 0, 0.55),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px rgba(255, 255, 255, 0.65),
+    inset 1px 0 1px rgba(255, 255, 255, 0.68),
+    inset -1px 0 1px rgba(255, 255, 255, 0.68);
+}
+
+.nav-logo-badge {
+  box-shadow: none;
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  .nav-logo-badge {
+    margin-left: 5px;
+  }
+}
+
+/* Glossy Deep Black Email Pill on Right (Matches Gambar 2 specular corners) */
+.nav-email-dark-pill {
+  background-color: #060608;
+  background-image:
+    radial-gradient(ellipse 55% 70% at 14% 12%, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.08) 45%, transparent 75%),
+    radial-gradient(ellipse 55% 70% at 88% 90%, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.06) 45%, transparent 75%),
+    linear-gradient(180deg, #121216 0%, #050507 100%);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.28);
+}
+
+.nav-email-dark-pill:hover {
+  background-color: #0d0d12;
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.38);
 }
 
 /* Section Scroll Margin to ensure fixed floating navbar does not cover headings */
@@ -255,7 +292,7 @@ section[id] {
   scroll-margin-top: 110px;
 }
 
-/* Active Nav Pill Indicator (Liquid Frosted Droplet) */
+/* Nav Link Items & Apple Liquid Lens Active Pill */
 .nav-pill-link {
   position: relative;
   display: inline-flex;
@@ -264,19 +301,28 @@ section[id] {
   min-height: 2.25rem;
   border-radius: 9999px;
   border: 1px solid transparent;
+  color: #27272a;
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.nav-pill-link:hover {
+  color: #050507;
+  background-color: rgba(15, 23, 42, 0.06);
 }
 
 .nav-pill-link.active {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.14) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.22) !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  color: #050507 !important;
+  font-weight: 600;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(232, 236, 243, 0.82) 100%) !important;
+  border-color: rgba(15, 23, 42, 0.12) !important;
+  box-shadow:
+    0 2px 8px -2px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0.5px rgba(255, 255, 255, 1) !important;
 }
 
 /* ==============================================================================
@@ -291,6 +337,11 @@ button {
   outline: 2px solid rgba(255, 255, 255, 0.85) !important;
   outline-offset: 3px !important;
   border-radius: 9999px;
+}
+
+#floating-navbar :focus-visible {
+  outline: 2px solid #060608 !important;
+  outline-offset: 2px !important;
 }
 
 /* Minimum touch targets for mobile accessibility (R-03) */
@@ -361,6 +412,27 @@ a.btn-tap-target,
   margin-bottom: 1.25rem;
   user-select: none;
   touch-action: pan-y;
+}
+
+.stack-showcase-wrapper:focus-visible {
+  border-radius: 0.875rem !important;
+  outline-offset: 6px !important;
+}
+
+@keyframes stackContentSwap {
+  from {
+    opacity: 0.35;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stack-content-swap {
+  animation: stackContentSwap 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .stack-deck-stage {

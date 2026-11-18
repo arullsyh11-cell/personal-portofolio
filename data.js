@@ -73,12 +73,12 @@ const portfolioData = {
     statusBadge: "Available for 3D LRC & React Web Projects",
     headline: "Muhammad Khoirul Alamsyah",
     subheadline:
-      "3D Generalist & 3D LRC (Lighting, Rendering, Compositing) Artist, also crafting responsive, clean web applications with React JS.",
+      "3D Generalist & 3D LRC (Lighting, Rendering, Compositing) Artist, also crafting responsive, clean web applications.",
     ctaButton: {
       label: "Lihat proyek pilihan",
       href: "#projects",
     },
-    microNote: "3D Production Pipeline · Lighting & Rendering · React JS · Semantic HTML & Tailwind CSS",
+    microNote: "3D Production Pipeline · Lighting & Rendering · JavaScipt · HTML & CSS",
   },
 
   // ----------------------------------------------------------------------------
@@ -98,7 +98,7 @@ const portfolioData = {
         "Aplikasi web kebugaran untuk pelacakan volume latihan gym harian, visualisasi grafik progres mingguan, dan manajemen rutinitas latihan berbasis React JS.",
       fullDescription:
         "GYMFlow dirancang untuk mempermudah pencatatan sesi gym harian tanpa hambatan input yang rumit. Dibangun menggunakan React JS dengan arsitektur komponen modular, visualisasi grafik performa latihan, dan manajemen state reaktif untuk pelacakan volume beban latihan secara real-time.",
-      techStack: ["React JS", "Tailwind CSS", "JavaScript ESNext", "Chart.js", "LocalStorage API"],
+      techStack: ["JavaScript", "CSS", "HTML", "LocalStorage API"],
       githubUrl: "https://github.com/arullsyh11-cell/arullsyh11-cell.github.io",
       liveUrl: "https://gymflow.my.id/",
       metrics: "State-driven workout log with instant responsive telemetry",
@@ -109,12 +109,48 @@ const portfolioData = {
       category: "Web Apps",
       featured: false,
       badge: "Productivity App",
-      image: "assets/images/orbit.png", // Ganti dengan file gambar Anda (misal: assets/images/orbit.png)
+      image: "assets/images/orbit.png",
+      // Daftar karya kategori Productivity (ORBIT & TASKLY) yang tampil bertumpuk dan berganti lengkap dengan deskripsinya saat digeser / di-scroll:
+      portfolioStack: [
+        {
+          title: "ORBIT · Productivity Workspace",
+          projectTitle: "ORBIT: Minimalist Productivity & Workspace",
+          image: "assets/images/orbit.png",
+          shortDescription:
+            "Aplikasi produktivitas berbasis web dengan sistem kanban board responsif, pelacak sprint tugas, dan mode fokus timer yang dibangun menggunakan arsitektur state client-side.",
+          fullDescription:
+            "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer dengan antarmuka monokrom yang bersih, cepat, dan bebas dari distraksi.",
+          techStack: ["JavaScript", "CSS", "HTML", "LocalStorage API"],
+          githubUrl: "https://github.com/arullsyh11-cell/ORBIT",
+          liveUrl: "https://dayflow-flax.vercel.app/",
+          metrics: "Sub-100ms interaction latency with zero UI bloat",
+        },
+        {
+          title: "TASKLY · Focus & Sprint Workspace",
+          projectTitle: "TASKLY: Focused Task & Sprint Productivity App",
+          image: "assets/images/taskly.webp",
+          shortDescription:
+            "Aplikasi produktivitas modern untuk pengelolaan tugas harian, ringkasan progres sprint, pencarian label cepat, dan Focus Mode dengan React 19, Vite 6, serta React Router v7.",
+          fullDescription:
+            "TASKLY menghadirkan ringkasan alur kerja harian (Total & Selesai, Berjalan, Fokus Hari Ini, Terlambat), fitur Quick Add Task, perencanaan sprint, pencarian tugas instan, serta Focus Mode khusus. Dibangun menggunakan React 19, Vite 6, React Router v7, Tailwind CSS, CSS Variables Design Tokens, dan ikon Lucide React.",
+          techStack: [
+            "React 19",
+            "Vite 6",
+            "React Router v7",
+            "Tailwind CSS",
+            "CSS Variables Design Tokens",
+            "Lucide React",
+          ],
+          githubUrl: "https://github.com/arullsyh11-cell/TASKLY", // TODO: Isi URL repository GitHub TASKLY di sini
+          liveUrl: "https://taskly-beta-opal.vercel.app/", // TODO: Isi URL Live Demo TASKLY di sini
+          metrics: "Token-driven dark workspace with sprint tracking & Focus Mode",
+        },
+      ],
       shortDescription:
-        "Aplikasi produktivitas berbasis web dengan sistem kanban board responsif, pelacak sprint tugas, dan mode fokus timer yang dibangun menggunakan React JS.",
+        "Aplikasi produktivitas berbasis web dengan sistem kanban board responsif, pelacak sprint tugas, dan mode fokus timer yang dibangun menggunakan arsitektur state client-side.",
       fullDescription:
-        "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer. Menggunakan React JS untuk render antarmuka yang cepat, fluid drag-and-drop, dan antarmuka monokrom yang bebas dari distraksi.",
-      techStack: ["React JS", "Tailwind CSS", "React Context", "Vite", "Web Storage"],
+        "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer dengan antarmuka monokrom yang bersih, cepat, dan bebas dari distraksi.",
+      techStack: ["JavaScript", "CSS", "HTML", "LocalStorage API"],
       githubUrl: "https://github.com/arullsyh11-cell/ORBIT",
       liveUrl: "https://dayflow-flax.vercel.app/",
       metrics: "Sub-100ms interaction latency with zero UI bloat",
@@ -153,7 +189,7 @@ const portfolioData = {
         "Eksplorasi pencahayaan sinematik (lighting), material look development, dan compositing untuk lingkungan 3D realistis menggunakan color pipeline ACEScg.",
       fullDescription:
         "Proyek 3D Lighting, Rendering, and Compositing (LRC) yang memfokuskan pada penataan mood visual, pemodelan cahaya natural dan artificial (three-point and rim lighting), multi-pass EXR rendering (beauty, diffuse, specular, crypto, ambient occlusion), serta final grading compositing.",
-      techStack: ["3D Lighting", "Rendering & Shading", "Compositing", "ACEScg Pipeline", "Blender"],
+      techStack: ["3D Lighting", "Rendering & Shading", "Compositing", "Blender"],
       githubUrl: null,
       liveUrl: null,
       metrics: "High dynamic range lighting with 32-bit multi-channel EXR compositing",
@@ -200,7 +236,7 @@ const portfolioData = {
         "Pemodelan 3D hard surface dengan topologi quad bersih, pemetaan UV tanpa distorsi, tekstur PBR 4K, dan integrasi assembly aset ke dalam scene utuh.",
       fullDescription:
         "Portofolio 3D Generalist yang mencakup alur kerja komprehensif mulai dari blockout, sub-division surface modeling, retopology quad bersih, baking normal map, penataan tekstur PBR procedural, hingga final stage presentation.",
-      techStack: ["3D Modeling", "SubD Topology", "UV Unwrapping", "PBR Texturing", "LookDev"],
+      techStack: ["3D Modeling", "SubD Topology", "UV Unwrapping", "3D Printing"],
       githubUrl: null,
       liveUrl: null,
       metrics: "Production-ready clean quad topology with optimized draw calls",
@@ -273,11 +309,11 @@ const portfolioData = {
       period: "2025 - Present",
       location: "Personal Project",
       description: [
-        "Merancang dan mengembangkan aplikasi web kebugaran GYMFlow menggunakan React JS dan Tailwind CSS.",
+        "Merancang dan mengembangkan aplikasi web kebugaran GYMFlow menggunakan HTML, CSS, JavaScript.",
         "Membangun aplikasi produktivitas ORBIT dengan fitur kanban board, real-time focus timer, dan manajemen state modular.",
         "Mengoptimalkan bundle size dan performa rendering frontend untuk memastikan pengalaman pengguna yang mulus.",
       ],
-      skillsUsed: ["React JS", "Tailwind CSS", "JavaScript ESNext", "Vite"],
+      skillsUsed: ["HTML", "CSS", "JavaScript"],
     },
   ],
 

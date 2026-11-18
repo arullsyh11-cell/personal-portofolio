@@ -64,38 +64,43 @@
   <div class="site-content min-h-screen flex flex-col justify-between">
 
     <!-- ========================================================================
-         1. FLOATING PILL NAVBAR (Liquid Glass Capsule - Desktop & Mobile Unified)
+         1. FLOATING PILL NAVBAR (Pure White Capsule - Aligned to Hero Width on Web)
          ======================================================================== -->
-    <header class="fixed top-3 sm:top-5 left-0 right-0 z-50 flex justify-center px-3 sm:px-4 pointer-events-none">
-      <div id="floating-navbar"
-        class="pointer-events-auto floating-capsule w-full max-w-[23rem] md:max-w-3xl min-h-[3.25rem] sm:min-h-[3.5rem] flex items-center justify-between gap-2 sm:gap-3 px-2.5 py-1.5 sm:p-2 rounded-full">
+    <header class="fixed top-3 sm:top-5 left-0 right-0 z-50 pointer-events-none">
+      <div class="px-3 sm:px-6 max-w-6xl mx-auto flex justify-center">
+        <div id="floating-navbar"
+          class="pointer-events-auto floating-capsule w-full max-w-[23rem] md:max-w-none flex items-center justify-between gap-2 md:gap-4 p-1.5 md:p-1 rounded-full">
 
-        <!-- Left: Circular Monogram Logo Mark -->
-        <a href="#"
-          class="min-h-9 min-w-9 sm:min-h-11 sm:min-w-11 flex items-center justify-center group focus-visible:outline-none shrink-0"
-          aria-label="Khoirul Alamsyah - Home">
-          <div
-            class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black border border-white/20 flex items-center justify-center font-bold text-white text-sm sm:text-base tracking-tight group-hover:scale-105 group-hover:border-white/40 transition-all shadow-md">
-            <img src="/assets/images/alam-abstract-a.svg">
+          <!-- Left: Deep Black Circular Emblem with Optically Balanced ALAM Abstract A (Gambar 1) -->
+          <a href="#"
+            class="nav-logo-badge w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0A0A0C] hover:bg-[#141418] flex items-center justify-center group focus-visible:outline-none shrink-0 transition-transform duration-150 hover:scale-[1.02] active:scale-[0.98]"
+            aria-label="Khoirul Alamsyah - Home">
+            <svg class="w-7 h-7 sm:w-[31px] sm:h-[31px] block transition-transform duration-150 group-hover:scale-105"
+              width="31" height="31" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true">
+              <path d="M52 18H66L36 102H20L52 18Z" fill="#FFFFFF" />
+              <path d="M72 28L100 102H83L64 50L72 28Z" fill="#B8C0CC" />
+              <path d="M46 72H72L77 85H41L46 72Z" fill="#FFFFFF" />
+            </svg>
+          </a>
+
+          <!-- Middle: Navigation Links (Spacious on Web, Compact & Even on Mobile) -->
+          <nav
+            class="flex-1 md:flex-initial flex items-center justify-between md:justify-center gap-0.5 md:gap-5 lg:gap-7 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar px-1 sm:px-0"
+            id="nav-links-desktop" aria-label="Main Navigation">
+            <!-- Populated from data.js: Projects, About, Experience, Contact -->
+          </nav>
+
+          <!-- Right: Glossy Deep Black Email Pill Button (Matches Gambar 2) -->
+          <div class="hidden md:flex items-center shrink-0">
+            <button type="button" id="nav-email-pill-btn"
+              class="nav-email-dark-pill inline-flex items-center justify-center gap-2 h-11 text-white font-semibold text-xs sm:text-[13px] px-5 rounded-full transition-all duration-150 focus-visible:outline-none active:scale-[0.98]"
+              aria-label="Copy email address to clipboard">
+              <span id="nav-email-text" class="font-sans">arullsyh11@gmail.com</span>
+            </button>
           </div>
-        </a>
 
-        <!-- Middle: Navigation Links (Zero empty gap on Mobile, centered on Desktop) -->
-        <nav
-          class="flex-1 md:flex-initial flex items-center justify-between md:justify-center gap-1 sm:gap-1.5 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar"
-          id="nav-links-desktop" aria-label="Main Navigation">
-          <!-- Populated from data.js: Projects, About, Experience, Contact -->
-        </nav>
-
-        <!-- Right: High-Contrast White Email Pill Button (Desktop) -->
-        <div class="hidden md:flex items-center shrink-0">
-          <button type="button" id="nav-email-pill-btn"
-            class="inline-flex items-center gap-2 bg-white hover:bg-slate-200 text-black font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-full transition-all duration-150 shadow-md hover:shadow-lg focus-visible:outline-none active:scale-[0.98]"
-            aria-label="Copy email address to clipboard">
-            <span id="nav-email-text" class="font-sans">arullsyh11@gmail.com</span>
-          </button>
         </div>
-
       </div>
     </header>
 
@@ -115,7 +120,7 @@
           <div class="hero-text-column">
             <!-- Status Pill -->
             <div
-              class="inline-flex max-w-full items-center px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm mb-5 sm:mb-6"
+              class="inline-flex max-w-full items-center px-3.5 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-5 sm:mb-6"
               id="hero-status-pill">
               <!-- Populated from data.js -->
             </div>
