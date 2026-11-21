@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initModalListeners();
   initNavbarScroll();
   initCardSpotlight();
-  initScrollReveal();
+  initScrollChoreography();
 });
 
 /* ==============================================================================
@@ -742,6 +742,11 @@ function renderProjectCards() {
 
   // Attach interactive spotlight hover to cards
   initCardSpotlight();
+
+  // Re-bind continuous scroll choreography for newly filtered cards
+  if (typeof refreshScrollMotionTargets === "function") {
+    refreshScrollMotionTargets();
+  }
 }
 
 /* ==============================================================================
@@ -823,11 +828,11 @@ function initExperienceSection() {
   const container = document.getElementById("experience-timeline");
   if (!container || !portfolioData.experience) return;
 
-  container.innerHTML = portfolioData.experience
+  const itemsMarkup = portfolioData.experience
     .map(
       (exp) => `
-      <div class="relative pl-6 md:pl-8 pb-10 border-l border-white/10 last:pb-2">
-        <span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-slate-500 border-2 border-[#08080A]"></span>
+      <div class="timeline-item relative pl-6 md:pl-8 pb-10 last:pb-2">
+        <span class="timeline-dot absolute -left-[4.5px] top-1.5 w-2.5 h-2.5 rounded-full bg-slate-500 border-2 border-[#08080A]"></span>
 
         <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-2">
           <h3 class="text-base sm:text-lg font-semibold text-white tracking-tight">
@@ -870,6 +875,15 @@ function initExperienceSection() {
     `
     )
     .join("");
+
+  container.innerHTML = `
+    <div class="experience-timeline-wrap">
+      <div class="timeline-rail-track" aria-hidden="true">
+        <div class="timeline-rail-progress" id="timeline-rail-progress"></div>
+      </div>
+      ${itemsMarkup}
+    </div>
+  `;
 }
 
 /* ==============================================================================
@@ -1190,33 +1204,209 @@ function initCardSpotlight() {
 }
 
 /* ==============================================================================
-   13. RESPONSIVE ANIMATIONS: SCROLL REVEAL (INTERSECTION OBSERVER)
+   13. SMOOTH SCROLL CHOREOGRAPHY ENGINE (R-19 Motion 3)
+   - Damped RAF interpolation for silky continuous scroll-linked motion
+   - Bi-directional reveals that replay smoothly every time you scroll down or up
+   - Scroll-drawn experience timeline rail, hero parallax, & card scale-to-focus
    ============================================================================== */
-function initScrollReveal() {
+let scrollRevealObserver = null;
+let scrollScrubCards = [];
+let smoothScrollY = 0;
+let targetScrollY = 0;
+let scrollRafId = null;
+
+function clamp01(val) {
+  return Math.max(0, Math.min(1, val));
+}
+
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+/**
+ * Mengumpulkan seluruh elemen animasi & mengikat IntersectionObserver bi-directional
+ */
+function refreshScrollMotionTargets() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return;
   }
 
-  const targets = document.querySelectorAll("section, .card-project, #skills-container > div, #experience-timeline > div");
-  targets.forEach((el, index) => {
-    if (!el.classList.contains("reveal-item")) {
-      el.classList.add("reveal-item");
-      if (index % 2 === 1) el.classList.add("delay-100");
-      if (index % 3 === 2) el.classList.add("delay-200");
+  // Daftar grup elemen dengan karakter gerak berbeda per section (R-19)
+  const motionGroups = [
+    { selector: "#projects > div:first-child, #about > div:first-child > :not(#about-paragraphs), #experience > div:first-child, #contact > h2, #contact > p, #contact > div:first-child", motion: "editorial", stagger: 65 },
+    { selector: "#about-paragraphs > p", motion: "editorial", stagger: 85 },
+    { selector: "#about-principles > div", motion: "scale", stagger: 95 },
+    { selector: "#experience-timeline .timeline-item", motion: "slide-right", stagger: 110 },
+    { selector: "#contact > .inline-flex, #contact > div:last-child, footer > div", motion: "scale", stagger: 80 },
+  ];
+
+  const seen = new Set();
+  motionGroups.forEach(({ selector, motion, stagger }) => {
+    const nodes = document.querySelectorAll(selector);
+    nodes.forEach((el, idx) => {
+      if (seen.has(el)) return;
+      seen.add(el);
+      el.classList.add("scroll-reveal");
+      el.setAttribute("data-motion", motion);
+      el.style.setProperty("--reveal-delay", `${Math.min(idx * stagger, 260)}ms`);
+
+      // Jika saat inisialisasi elemen sudah terlihat di viewport, langsung tampilkan
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.96 && rect.bottom > 0) {
+        el.classList.add("is-inview");
+      }
+
+      if (scrollRevealObserver) {
+        scrollRevealObserver.observe(el);
+      }
+    });
+  });
+
+  // Kartu proyek dikontrol secara kontinu berbasis posisi scroll (scale & glide)
+  scrollScrubCards = Array.from(document.querySelectorAll(".card-project"));
+  updateContinuousScrollVisuals(smoothScrollY);
+}
+
+/**
+ * Memperbarui semua properti visual yang tersinkronisasi langsung dengan posisi scroll
+ */
+function updateContinuousScrollVisuals(currentY) {
+  const vh = window.innerHeight || 800;
+  const docMax = Math.max(1, document.documentElement.scrollHeight - vh);
+  const docProgress = clamp01(currentY / docMax);
+
+  // 1. Drift halus diagonal light beams di background sesuai scroll (00:00-00:06 referensi)
+  const rootStyle = document.documentElement.style;
+  rootStyle.setProperty("--bg-shift-x", `${(-docProgress * 72).toFixed(2)}px`);
+  rootStyle.setProperty("--bg-shift-y", `${(docProgress * 56).toFixed(2)}px`);
+
+  // 2. Parallax exit halus pada Hero saat di-scroll turun, kembali tajam saat scroll naik
+  const heroExit = clamp01(currentY / Math.min(540, vh * 0.68));
+  const heroSplit = document.querySelector(".hero-split-layout");
+  if (heroSplit) {
+    heroSplit.style.setProperty("--hero-exit", heroExit.toFixed(4));
+  }
+
+  // 3. Continuous scroll-scrubbed scale & glide pada kartu proyek (00:10-00:15 referensi)
+  // Menggunakan selisih delta agar tetap ter-damped mengikuti smoothScrollY
+  const scrollDelta = window.scrollY - currentY;
+  scrollScrubCards.forEach((card) => {
+    const rawRect = card.getBoundingClientRect();
+    const dampedTop = rawRect.top + scrollDelta;
+    const dampedBottom = rawRect.bottom + scrollDelta;
+
+    // Masuk dari bawah viewport (1.02*vh -> 0.72*vh) => progress 0 -> 1
+    const enterRaw = clamp01((vh * 1.04 - dampedTop) / (vh * 0.34));
+    const enterEase = easeOutCubic(enterRaw);
+
+    // Sedikit meredup elegan saat keluar melewati batas atas viewport
+    const leaveRaw = clamp01((dampedBottom - vh * 0.04) / (vh * 0.22));
+    const leaveEase = easeOutCubic(leaveRaw);
+
+    const visibility = Math.min(enterEase, leaveEase);
+    const translateY = (1 - enterEase) * 34 - (1 - leaveEase) * 14;
+    const scale = 0.945 + visibility * 0.055;
+    const opacity = 0.16 + visibility * 0.84;
+
+    card.style.setProperty("--card-y", `${translateY.toFixed(2)}px`);
+    card.style.setProperty("--card-scale", scale.toFixed(4));
+    card.style.setProperty("--card-opacity", opacity.toFixed(4));
+  });
+
+  // 4. Live scroll-drawn Experience Timeline Rail & Milestone Dot Illumination
+  const timelineWrap = document.querySelector(".experience-timeline-wrap");
+  if (timelineWrap) {
+    const rect = timelineWrap.getBoundingClientRect();
+    const dampedTop = rect.top + scrollDelta;
+    const triggerY = vh * 0.68;
+    const progress = clamp01((triggerY - dampedTop) / Math.max(1, rect.height));
+    timelineWrap.style.setProperty("--timeline-progress", progress.toFixed(4));
+
+    const items = timelineWrap.querySelectorAll(".timeline-item");
+    items.forEach((item) => {
+      const dot = item.querySelector(".timeline-dot");
+      if (!dot) return;
+      const dotRect = dot.getBoundingClientRect();
+      if (dotRect.top + scrollDelta <= triggerY + 12) {
+        dot.classList.add("is-reached");
+      } else {
+        dot.classList.remove("is-reached");
+      }
+    });
+  }
+}
+
+function tickScrollChoreography() {
+  const diff = targetScrollY - smoothScrollY;
+  smoothScrollY += diff * 0.12;
+
+  if (Math.abs(diff) < 0.15) {
+    smoothScrollY = targetScrollY;
+    updateContinuousScrollVisuals(smoothScrollY);
+    scrollRafId = null;
+    return;
+  }
+
+  updateContinuousScrollVisuals(smoothScrollY);
+  scrollRafId = window.requestAnimationFrame(tickScrollChoreography);
+}
+
+function scheduleScrollTick() {
+  targetScrollY = window.scrollY;
+  if (scrollRafId === null) {
+    scrollRafId = window.requestAnimationFrame(tickScrollChoreography);
+  }
+}
+
+function initScrollChoreography() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  // 1. Staggered Hero entrance on load
+  const heroSequence = [
+    document.getElementById("hero-status-pill"),
+    document.getElementById("hero-headline"),
+    document.getElementById("hero-subheadline"),
+    document.getElementById("hero-secondary-cta")?.parentElement,
+    document.getElementById("hero-micro-note"),
+    document.querySelector(".hero-profile-photo"),
+  ].filter(Boolean);
+
+  heroSequence.forEach((el, idx) => {
+    el.classList.add("hero-enter");
+    if (idx > 0 && idx <= 4) {
+      el.classList.add(`hero-enter-delay-${idx}`);
     }
   });
 
-  const observer = new IntersectionObserver(
+  // 2. Bi-directional IntersectionObserver: re-animates cleanly every time scrolled down or back up
+  scrollRevealObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        const el = entry.target;
         if (entry.isIntersecting) {
-          entry.target.classList.add("revealed");
-          observer.unobserve(entry.target);
+          el.classList.add("is-inview");
+        } else {
+          // Tentukan arah keluarnya elemen agar saat masuk kembali geraknya natural mengikuti arah scroll
+          const isAboveViewport = entry.boundingClientRect.bottom <= 0;
+          el.setAttribute("data-reveal-dir", isAboveViewport ? "up" : "down");
+          el.classList.remove("is-inview");
         }
       });
     },
-    { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+    { threshold: 0.08, rootMargin: "0px 0px -36px 0px" }
   );
 
-  targets.forEach((el) => observer.observe(el));
+  smoothScrollY = window.scrollY;
+  targetScrollY = window.scrollY;
+
+  refreshScrollMotionTargets();
+
+  window.addEventListener("scroll", scheduleScrollTick, { passive: true });
+  window.addEventListener("resize", () => {
+    targetScrollY = window.scrollY;
+    smoothScrollY = window.scrollY;
+    updateContinuousScrollVisuals(smoothScrollY);
+  }, { passive: true });
 }

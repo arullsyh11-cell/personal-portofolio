@@ -53,28 +53,43 @@ body {
 }
 
 /* ==============================================================================
-   METALLIC SPECULAR & GLOSSY BACKGROUND (Refined Studio Lighting Reflection)
-   Simulates ambient titanium sheen & smooth glass reflection across dark charcoal.
+   METALLIC SPECULAR & GLOSSY BACKGROUND (Scroll-Responsive Glass Light Beams)
+   Simulates polished diagonal light ribbons on dark obsidian glass that drift
+   smoothly in response to scroll (inspired by reference choreography).
    ============================================================================== */
 .glossy-streaks-bg {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   pointer-events: none;
   z-index: 0;
   background-image:
     radial-gradient(ellipse 95% 45% at 50% -8%, rgba(210, 225, 240, 0.08) 0%, rgba(148, 163, 184, 0.025) 45%, transparent 75%),
-    linear-gradient(130deg,
-      rgba(255, 255, 255, 0.02) 0%,
-      transparent 24%,
-      rgba(255, 255, 255, 0.025) 36%,
-      transparent 52%,
-      rgba(255, 255, 255, 0.016) 74%,
-      transparent 100%),
     radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.02) 0%, transparent 60%);
-  opacity: 1;
+}
+
+.glossy-streaks-bg::before {
+  content: '';
+  position: absolute;
+  inset: -18%;
+  background-image:
+    linear-gradient(126deg,
+      transparent 0%,
+      transparent 16%,
+      rgba(255, 255, 255, 0.032) 22%,
+      rgba(255, 255, 255, 0.008) 26%,
+      transparent 33%,
+      transparent 44%,
+      rgba(255, 255, 255, 0.042) 50%,
+      rgba(255, 255, 255, 0.012) 55%,
+      transparent 63%,
+      transparent 74%,
+      rgba(255, 255, 255, 0.028) 80%,
+      transparent 88%);
+  transform: translate3d(var(--bg-shift-x, 0px), var(--bg-shift-y, 0px), 0);
+  will-change: transform;
 }
 
 /* Content Container layer above background */
@@ -92,6 +107,9 @@ body {
   align-items: center;
   gap: 0.75rem 1rem;
   text-align: left;
+  transform: translate3d(0, calc(var(--hero-exit, 0) * -22px), 0);
+  opacity: calc(1 - var(--hero-exit, 0) * 0.65);
+  will-change: transform, opacity;
 }
 
 .hero-text-column {
@@ -131,12 +149,14 @@ body {
     0 20px 45px -12px rgba(0, 0, 0, 0.78),
     0 0 0 1px rgba(255, 255, 255, 0.05),
     inset 0 1px 1px rgba(255, 255, 255, 0.22);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  transform: translate3d(0, calc(var(--hero-exit, 0) * -20px + var(--photo-hover-y, 0px)), 0) scale(calc(1 - var(--hero-exit, 0) * 0.05));
+  transition: border-color 0.3s ease;
+  will-change: transform;
 }
 
 .hero-profile-photo:hover {
   border-color: rgba(255, 255, 255, 0.32);
-  transform: translateY(-2px);
+  --photo-hover-y: -3px;
 }
 
 .hero-profile-photo img {
@@ -372,7 +392,10 @@ a.btn-tap-target,
   border: 1px solid var(--border-subtle);
   border-radius: 1.25rem;
   overflow: hidden;
-  transition: border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  opacity: var(--card-opacity, 1);
+  transform: translate3d(0, calc(var(--card-y, 0px) + var(--hover-y, 0px)), 0) scale(var(--card-scale, 1));
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  will-change: transform, opacity;
 }
 
 .card-project::before {
@@ -393,7 +416,7 @@ a.btn-tap-target,
 
 .card-project:hover {
   border-color: rgba(255, 255, 255, 0.22);
-  transform: translateY(-3px);
+  --hover-y: -4px;
   box-shadow:
     0 20px 40px -15px rgba(0, 0, 0, 0.7),
     0 0 0 1px rgba(255, 255, 255, 0.06);
@@ -776,32 +799,132 @@ a.btn-tap-target,
 }
 
 /* ==============================================================================
-   RESPONSIVE SCROLL REVEAL ANIMATIONS (R-19 Motion 2)
-   Smooth fluid entrances without jarring jumps.
+   SCROLL-LINKED EXPERIENCE TIMELINE RAIL & MILESTONES
    ============================================================================== */
-.reveal-item {
+.experience-timeline-wrap {
+  position: relative;
+}
+
+.timeline-rail-track {
+  position: absolute;
+  left: 0;
+  top: 0.375rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.timeline-rail-progress {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(148, 163, 184, 0.65) 100%);
+  transform-origin: top center;
+  transform: scaleY(var(--timeline-progress, 0));
+  will-change: transform;
+}
+
+.timeline-dot {
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.timeline-dot.is-reached {
+  background-color: #ffffff;
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.14);
+}
+
+/* ==============================================================================
+   SCROLL-CHOREOGRAPHED BI-DIRECTIONAL MOTION SYSTEM (R-19 Motion 3)
+   Animates smoothly on every scroll pass (down & back up) with expo-out easing.
+   ============================================================================== */
+@keyframes heroIntroReveal {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translate3d(0, 22px, 0);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.hero-enter {
+  animation: heroIntroReveal 0.78s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.hero-enter-delay-1 {
+  animation-delay: 80ms;
+}
+
+.hero-enter-delay-2 {
+  animation-delay: 160ms;
+}
+
+.hero-enter-delay-3 {
+  animation-delay: 240ms;
+}
+
+.hero-enter-delay-4 {
+  animation-delay: 320ms;
+}
+
+/* Bi-directional scroll reveal elements */
+.scroll-reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  filter: blur(5px);
+  transform: translate3d(0, 30px, 0) scale(0.985);
+  transition:
+    opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.78s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
 }
 
-.reveal-item.revealed {
+/* When scrolling back up from below, enter smoothly downward */
+.scroll-reveal[data-reveal-dir="up"] {
+  transform: translate3d(0, -24px, 0) scale(0.985);
+}
+
+/* Editorial heading & prose blur-unveil */
+.scroll-reveal[data-motion="editorial"] {
+  filter: blur(7px);
+  transform: translate3d(0, 26px, 0);
+}
+
+.scroll-reveal[data-motion="editorial"][data-reveal-dir="up"] {
+  transform: translate3d(0, -20px, 0);
+}
+
+/* Card & principle cascade with soft scale */
+.scroll-reveal[data-motion="scale"] {
+  filter: blur(4px);
+  transform: translate3d(0, 34px, 0) scale(0.955);
+}
+
+.scroll-reveal[data-motion="scale"][data-reveal-dir="up"] {
+  transform: translate3d(0, -26px, 0) scale(0.955);
+}
+
+/* Timeline milestone horizontal slide */
+.scroll-reveal[data-motion="slide-right"] {
+  filter: blur(4px);
+  transform: translate3d(-20px, 14px, 0);
+}
+
+.scroll-reveal[data-motion="slide-right"][data-reveal-dir="up"] {
+  transform: translate3d(-20px, -14px, 0);
+}
+
+/* Active in-viewport state */
+.scroll-reveal.is-inview {
   opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stagger delay helpers */
-.delay-100 {
-  transition-delay: 100ms;
-}
-
-.delay-200 {
-  transition-delay: 200ms;
-}
-
-.delay-300 {
-  transition-delay: 300ms;
+  filter: blur(0);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 /* ==============================================================================
@@ -821,12 +944,22 @@ a.btn-tap-target,
     scroll-behavior: auto !important;
   }
 
-  .card-project:hover {
-    transform: none;
+  .glossy-streaks-bg::before,
+  .hero-split-layout,
+  .hero-profile-photo,
+  .card-project,
+  .timeline-rail-progress {
+    transform: none !important;
+    opacity: 1 !important;
   }
 
-  .reveal-item {
+  .card-project:hover {
+    --hover-y: 0px;
+  }
+
+  .scroll-reveal {
     opacity: 1 !important;
+    filter: none !important;
     transform: none !important;
   }
 }

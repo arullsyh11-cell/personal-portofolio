@@ -21,7 +21,7 @@ const portfolioData = {
   personal: {
     name: "Muhammad Khoirul Alamsyah",
     handle: "/khoirulalamsyah",
-    monogram: "A", // Inisial / logo monogram pada navbar (seperti referensi)
+    monogram: "A",
     role: "3D Generalist, 3D LRC Artist & Frontend Developer",
     location: "Jakarta, Indonesia (UTC+7)",
     availability: {
@@ -134,11 +134,9 @@ const portfolioData = {
           fullDescription:
             "TASKLY menghadirkan ringkasan alur kerja harian (Total & Selesai, Berjalan, Fokus Hari Ini, Terlambat), fitur Quick Add Task, perencanaan sprint, pencarian tugas instan, serta Focus Mode khusus. Dibangun menggunakan React 19, Vite 6, React Router v7, Tailwind CSS, CSS Variables Design Tokens, dan ikon Lucide React.",
           techStack: [
-            "React 19",
-            "Vite 6",
-            "React Router v7",
+            "React",
+            "Vite",
             "Tailwind CSS",
-            "CSS Variables Design Tokens",
             "Lucide React",
           ],
           githubUrl: "https://github.com/arullsyh11-cell/TASKLY", // TODO: Isi URL repository GitHub TASKLY di sini
@@ -236,7 +234,7 @@ const portfolioData = {
         "Pemodelan 3D hard surface dengan topologi quad bersih, pemetaan UV tanpa distorsi, tekstur PBR 4K, dan integrasi assembly aset ke dalam scene utuh.",
       fullDescription:
         "Portofolio 3D Generalist yang mencakup alur kerja komprehensif mulai dari blockout, sub-division surface modeling, retopology quad bersih, baking normal map, penataan tekstur PBR procedural, hingga final stage presentation.",
-      techStack: ["3D Modeling", "SubD Topology", "UV Unwrapping", "3D Printing"],
+      techStack: ["3D Modeling", "SubD Topology", "3D Printing"],
       githubUrl: null,
       liveUrl: null,
       metrics: "Production-ready clean quad topology with optimized draw calls",
@@ -251,7 +249,7 @@ const portfolioData = {
     sectionSubtitle: "Blending visual art with interactive web engineering.",
     paragraphs: [
       "Saya adalah seorang 3D Generalist dan 3D LRC (Lighting, Rendering, Compositing) Artist yang juga memiliki passion kuat dalam pengembangan aplikasi web modern menggunakan React JS. Pengalaman ganda ini memberi saya perspektif unik dalam memahami estetika visual sinematik sekaligus struktur kode yang rapi dan terukur.",
-      "Dalam dunia 3D, saya berfokus pada LookDev, tata pencahayaan (lighting setup), dan compositing untuk menciptakan atmosfer visual yang memikat. Di sisi web development, saya membangun aplikasi fungsional seperti GYMFlow dan ORBIT dengan mengedepankan performa cepat, interaksi intuitif, dan pengalaman pengguna yang nyaman.",
+      "Dalam dunia 3D, saya berfokus pada LookDev, tata pencahayaan (lighting setup), dan compositing untuk menciptakan atmosfer visual yang memikat. Di sisi web development, saya membangun aplikasi fungsional seperti GYMFlow, ORBIT, dan TASKLY dengan mengedepankan performa cepat, interaksi intuitif, dan pengalaman pengguna yang nyaman.",
     ],
     principles: [
       {
@@ -310,10 +308,10 @@ const portfolioData = {
       location: "Personal Project",
       description: [
         "Merancang dan mengembangkan aplikasi web kebugaran GYMFlow menggunakan HTML, CSS, JavaScript.",
-        "Membangun aplikasi produktivitas ORBIT dengan fitur kanban board, real-time focus timer, dan manajemen state modular.",
+        "Membangun aplikasi produktivitas ORBIT dan TASKLY dengan fitur kanban board, real-time focus timer, dan manajemen state modular.",
         "Mengoptimalkan bundle size dan performa rendering frontend untuk memastikan pengalaman pengguna yang mulus.",
       ],
-      skillsUsed: ["HTML", "CSS", "JavaScript"],
+      skillsUsed: ["HTML", "CSS", "JavaScript", "React JS", "Vite", "Tailwind CSS"],
     },
   ],
 

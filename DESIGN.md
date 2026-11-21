@@ -5,9 +5,9 @@
 - **Tone:** Professional, precise, restrained, and authentic. No fake marketing buzzwords, no invented metrics, and no slop decoration.
 
 ## 2. Three Dials
-- **ENERGY: 2 (Balanced)**. Refined and confident monochrome studio aesthetic with high contrast, crisp borders, and liquid glass accents on navigation without over-the-top agency noise.
-- **RHYTHM: 2 (Balanced)**. Consistent `max-w-6xl` alignment across all sections with deliberate hierarchy breaks: a 2-column split Hero (Name & Bio on left, soft rounded-square profile photo on right), a project showcase grid with 2-column featured cards and 3D layered stacked decks for 3D & LRC works, a 3-column Core Principles grid, and a vertical career timeline.
-- **MOTION: 2 (Balanced)**. Interactive 3D stacked card deck transitions (scroll, drag/swipe, click), floating navbar scroll elevation, card mouse spotlight, smooth scroll-spy active pill tracking, and full deference to `prefers-reduced-motion: reduce`.
+- **ENERGY: 2 (Balanced)**. Refined and confident monochrome studio aesthetic with high contrast, crisp borders, and Apple Pearl Liquid Glass floating navigation without over-the-top agency noise.
+- **RHYTHM: 2 (Balanced)**. Consistent `max-w-6xl` alignment across all sections with deliberate hierarchy breaks: a 2-column split Hero (Name & Bio on left, soft rounded-square profile photo on right), a project showcase grid with 2-column featured cards and layered stacked decks, a 3-column Core Principles grid, and a vertical career timeline.
+- **MOTION: 3 (Bold - Scroll-Linked Choreography)**. Damped 60fps scroll interpolation driving diagonal glossy background drift, Hero depth parallax, continuous scroll-scrubbed project card scale-to-focus, bi-directional directional reveals that replay smoothly on every scroll pass, live scroll-drawn Experience timeline progress rail with illuminated milestone dots, and complete deference to `prefers-reduced-motion: reduce`.
 
 ## 3. Palette & Color Decisions (R-01, R-29)
 - **Primary Background (`#08080A` to `#0E0E12`):** Deep charcoal base engineered to frame 3D renders and web app screenshots accurately while providing maximum contrast.
