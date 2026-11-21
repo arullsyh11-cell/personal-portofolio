@@ -57,8 +57,11 @@
 
 <body class="bg-[#08080A] text-[#F8FAFC] antialiased selection:bg-white/20 selection:text-white">
 
-  <!-- Diagonal Glossy Light Streaks Background Layer (Subtle Glass Reflection) -->
-  <div class="glossy-streaks-bg" aria-hidden="true"></div>
+  <!-- Minimalist Interactive 3D LRC Studio Rim-Light & Contour Background -->
+  <div class="glossy-streaks-bg" aria-hidden="true">
+    <canvas id="interactive-bg-canvas" class="interactive-bg-canvas"></canvas>
+    <div class="glossy-readability-veil"></div>
+  </div>
 
   <!-- Main Website Shell -->
   <div class="site-content min-h-screen flex flex-col justify-between">
@@ -110,9 +113,10 @@
     <main class="flex-grow">
 
       <!-- ======================================================================
-           2. HERO SECTION (Name on Left, Soft Rounded-Square Photo on Right)
+           2. HERO SECTION (Full-Viewport Focused Stage, Name Left + Photo Right)
            ====================================================================== -->
-      <section class="relative pt-28 sm:pt-40 pb-16 sm:pb-24 px-4 sm:px-6 max-w-6xl mx-auto"
+      <section id="home"
+        class="viewport-section hero-viewport relative min-h-[100dvh] flex flex-col justify-center pt-28 sm:pt-32 pb-16 px-4 sm:px-6 max-w-6xl mx-auto"
         aria-labelledby="hero-headline">
 
         <div class="hero-split-layout">
@@ -164,9 +168,10 @@
       </section>
 
       <!-- ======================================================================
-           3. SELECTED PROJECTS (Bento / Clean Grid with Category Filter)
+           3. SELECTED PROJECTS (Full-Viewport Section with Category Filter)
            ====================================================================== -->
-      <section id="projects" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
+      <section id="projects"
+        class="viewport-section min-h-[100dvh] flex flex-col justify-center pt-28 sm:pt-32 pb-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
         aria-labelledby="projects-heading">
 
         <!-- Section Header -->
@@ -194,9 +199,10 @@
       </section>
 
       <!-- ======================================================================
-           4. ABOUT SECTION
+           4. ABOUT SECTION (Full-Viewport Focused Stage)
            ====================================================================== -->
-      <section id="about" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
+      <section id="about"
+        class="viewport-section min-h-[100dvh] flex flex-col justify-center pt-28 sm:pt-32 pb-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
         aria-labelledby="about-title">
 
         <!-- Header & Background Bio -->
@@ -216,9 +222,9 @@
         </div>
 
         <!-- Principles (Spacious, Generous Cards) -->
-        <div>
-          <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-5">Core Principles</div>
-          <div id="about-principles" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="relative">
+          <div class="relative z-10 font-mono text-xs uppercase tracking-widest text-slate-500 mb-6">Core Principles</div>
+          <div id="about-principles" class="relative z-0 grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Populated from data.js with generous padding and clear typography -->
           </div>
         </div>
@@ -226,9 +232,10 @@
       </section>
 
       <!-- ======================================================================
-           5. EXPERIENCE SECTION (Timeline of Professional Roles)
+           5. EXPERIENCE SECTION (Full-Viewport Focused Timeline)
            ====================================================================== -->
-      <section id="experience" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
+      <section id="experience"
+        class="viewport-section min-h-[100dvh] flex flex-col justify-center pt-28 sm:pt-32 pb-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
         aria-labelledby="experience-heading">
         <div class="mb-10 text-left">
           <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Career Journey</div>
@@ -246,9 +253,10 @@
       </section>
 
       <!-- ======================================================================
-           6. CONTACT & COLLABORATION SECTION
+           6. CONTACT & COLLABORATION SECTION (Full-Viewport Focused Stage)
            ====================================================================== -->
-      <section id="contact" class="py-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06] text-center"
+      <section id="contact"
+        class="viewport-section viewport-section-contact min-h-[calc(100dvh-6.25rem)] flex flex-col justify-center pt-28 sm:pt-32 pb-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06] text-center"
         aria-labelledby="contact-title">
         <div class="font-mono text-xs uppercase tracking-widest text-slate-500 mb-2">Communication</div>
         <h2 id="contact-title" class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-4">
@@ -260,7 +268,7 @@
 
         <!-- Direct Email Pill Box (Equal height buttons as requested in Gambar 5) -->
         <div
-          class="inline-flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 p-2.5 rounded-2xl border border-white/10 bg-[#0E0E11] mb-6 max-w-full">
+          class="self-center inline-flex flex-col sm:flex-row items-center gap-2.5 sm:gap-3 p-2.5 rounded-2xl border border-white/10 bg-[#0E0E11] mb-6 max-w-full">
           <div class="px-4 py-1.5 font-mono text-xs sm:text-sm text-slate-200 break-all" id="contact-email-text">
             <!-- Populated from data.js -->
           </div>
@@ -293,11 +301,11 @@
     <!-- ========================================================================
          7. FOOTER
          ======================================================================== -->
-    <footer class="border-t border-white/[0.08] bg-[#08080A] py-10 px-4 sm:px-6">
+    <footer class="border-t border-white/[0.08] bg-[#08080A]/90 py-10 px-4 sm:px-6">
       <div
-        class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-        <p id="footer-copyright"><!-- Populated from data.js --></p>
-        <p id="footer-built-with"><!-- Populated from data.js --></p>
+        class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <p id="footer-copyright">© 2026 Muhammad Khoirul Alamsyah. Designed &amp; engineered with clean monochrome aesthetics.</p>
+        <p id="footer-built-with">Pure Semantic HTML, Tailwind CSS &amp; Vanilla JS. Zero tracking.</p>
       </div>
     </footer>
 
@@ -308,10 +316,11 @@
        ========================================================================== -->
   <div id="floating-contact-container"
     class="quick-contact-container fixed bottom-6 right-6 z-40 flex flex-col items-end">
-    <!-- Popover Menu -->
+    <!-- Popover Menu (Smooth Spring Popover Transition) -->
     <div id="floating-contact-menu"
-      class="hidden mb-3 p-2 rounded-xl border border-white/10 bg-[#0E0E11]/95 backdrop-blur-md shadow-2xl w-48 transition-all">
-      <div class="text-[10px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1 border-b border-white/5 mb-1">
+      class="quick-contact-popover mb-3 p-2 rounded-xl border border-white/12 bg-[#0E0E12]/95 backdrop-blur-md shadow-2xl w-52"
+      aria-hidden="true">
+      <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400 px-3 py-1.5 border-b border-white/5 mb-1">
         Quick Connect
       </div>
       <div id="floating-contact-options" class="space-y-0.5">
@@ -321,8 +330,8 @@
 
     <!-- Floating Trigger Pill Button -->
     <button type="button" id="floating-contact-trigger"
-      class="quick-contact-trigger inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-[#141418] hover:bg-[#1c1c22] text-white shadow-xl hover:border-white/30 transition-all duration-150 font-sans font-medium text-xs focus-visible:outline-none"
-      aria-expanded="false" aria-label="Open quick contact menu">
+      class="quick-contact-trigger inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-white/15 bg-[#141418] hover:bg-[#1c1c22] text-white shadow-xl hover:border-white/30 font-sans font-medium text-xs focus-visible:outline-none"
+      aria-expanded="false" aria-controls="floating-contact-menu" aria-label="Open quick contact menu">
       <span class="quick-contact-status w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
       <svg class="quick-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

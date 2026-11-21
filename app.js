@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initModalListeners();
   initNavbarScroll();
   initCardSpotlight();
+  initInteractiveBackground();
   initScrollChoreography();
 });
 
@@ -207,9 +208,21 @@ let activeCategory = "All";
 // Menyimpan index slide aktif untuk masing-masing project 3D & LRC
 const projectStackState = {};
 
+let pendingLinkListenerBound = false;
+
 function initProjectsSection() {
   renderProjectCategoryFilters();
   renderProjectCards();
+
+  if (!pendingLinkListenerBound) {
+    pendingLinkListenerBound = true;
+    document.addEventListener("click", (e) => {
+      const pendingBtn = e.target.closest("[data-pending-link]");
+      if (!pendingBtn) return;
+      const label = pendingBtn.getAttribute("data-pending-link") || "Link";
+      showToast(`${label} will be available soon.`);
+    });
+  }
 }
 
 function renderProjectCategoryFilters() {
@@ -289,13 +302,15 @@ function isPendingUrl(url) {
 function renderProjectCardLinksHTML(variant) {
   if (!variant.githubUrl && !variant.liveUrl) return "";
 
+  // TODO: Replace "#" placeholder URLs in data.js once TASKLY repository and live deployment are public.
   const githubHTML = variant.githubUrl
     ? isPendingUrl(variant.githubUrl)
       ? `<button type="button" data-pending-link="Source Code"
              class="inline-flex items-center gap-1.5 px-2.5 py-2 min-h-[38px] text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03] font-sans text-[11px] font-medium"
-             aria-label="Source Code"
-             title="Source Code">
+             aria-label="Source Code (Coming soon)"
+             title="Source Code (Coming soon)">
             ${icons.github}
+            <span>Soon</span>
           </button>`
       : `<a href="${variant.githubUrl}" target="_blank" rel="noopener noreferrer" 
              class="w-9 h-9 min-h-[38px] inline-flex items-center justify-center text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03]"
@@ -308,10 +323,9 @@ function renderProjectCardLinksHTML(variant) {
     ? isPendingUrl(variant.liveUrl)
       ? `<button type="button" data-pending-link="Live Demo"
              class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-slate-200 bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-             aria-label="Live Demo"
-             title="Live Demo">
-            <span>Live Demo</span>
-            ${icons.externalLink}
+             aria-label="Live Demo (Coming soon)"
+             title="Live Demo (Coming soon)">
+            <span>Coming soon</span>
           </button>`
       : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
              class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
@@ -330,12 +344,13 @@ function renderProjectCardLinksHTML(variant) {
 function renderModalActionsHTML(variant) {
   if (!variant.githubUrl && !variant.liveUrl) return "";
 
+  // TODO: Replace "#" placeholder URLs in data.js once TASKLY repository and live deployment are public.
   const githubHTML = variant.githubUrl
     ? isPendingUrl(variant.githubUrl)
       ? `<button type="button" data-pending-link="Source Code"
              class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors"
-             aria-label="Source Code">
-            ${icons.github} <span class="ml-2">Source Code</span>
+             aria-label="Source Code (Coming soon)">
+            ${icons.github} <span class="ml-2">Source Code (Coming soon)</span>
           </button>`
       : `<a href="${variant.githubUrl}" target="_blank" rel="noopener noreferrer" 
              class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors">
@@ -347,8 +362,8 @@ function renderModalActionsHTML(variant) {
     ? isPendingUrl(variant.liveUrl)
       ? `<button type="button" data-pending-link="Visit Live Demo"
              class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors"
-             aria-label="Visit Live Demo">
-            <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
+             aria-label="Live Demo (Coming soon)">
+            <span>Live Demo (Coming soon)</span>
           </button>`
       : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
              class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
@@ -834,42 +849,44 @@ function initExperienceSection() {
       <div class="timeline-item relative pl-6 md:pl-8 pb-10 last:pb-2">
         <span class="timeline-dot absolute -left-[4.5px] top-1.5 w-2.5 h-2.5 rounded-full bg-slate-500 border-2 border-[#08080A]"></span>
 
-        <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-2">
-          <h3 class="text-base sm:text-lg font-semibold text-white tracking-tight">
-            ${exp.role} <span class="text-slate-400 font-normal">at ${exp.company}</span>
-          </h3>
-          <span class="font-mono text-xs text-slate-400 whitespace-nowrap">
-            ${exp.period}
-          </span>
-        </div>
+        <div class="timeline-item-body">
+          <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-2">
+            <h3 class="text-base sm:text-lg font-semibold text-white tracking-tight">
+              ${exp.role} <span class="text-slate-400 font-normal">at ${exp.company}</span>
+            </h3>
+            <span class="font-mono text-xs text-slate-400 whitespace-nowrap">
+              ${exp.period}
+            </span>
+          </div>
 
-        <p class="font-sans text-xs font-medium text-slate-500 mb-3">
-          ${exp.location}
-        </p>
+          <p class="font-sans text-xs font-medium text-slate-500 mb-3">
+            ${exp.location}
+          </p>
 
-        <ul class="space-y-2 mb-4 text-xs md:text-sm text-slate-300">
-          ${exp.description
-          .map(
-            (point) => `
-              <li class="flex items-start gap-2.5 leading-relaxed">
-                <span class="text-slate-500 mt-1 shrink-0">›</span>
-                <span>${point}</span>
-              </li>
-            `
-          )
-          .join("")}
-        </ul>
+          <ul class="space-y-2 mb-4 text-xs md:text-sm text-slate-300">
+            ${exp.description
+            .map(
+              (point) => `
+                <li class="flex items-start gap-2.5 leading-relaxed">
+                  <span class="text-slate-500 mt-1 shrink-0">›</span>
+                  <span>${point}</span>
+                </li>
+              `
+            )
+            .join("")}
+          </ul>
 
-        <div class="flex flex-wrap gap-1.5">
-          ${exp.skillsUsed
-          .map(
-            (s) => `
-              <span class="tech-pill">
-                ${s}
-              </span>
-            `
-          )
-          .join("")}
+          <div class="flex flex-wrap gap-1.5">
+            ${exp.skillsUsed
+            .map(
+              (s) => `
+                <span class="tech-pill">
+                  ${s}
+                </span>
+              `
+            )
+            .join("")}
+          </div>
         </div>
       </div>
     `
@@ -970,24 +987,33 @@ function initFloatingContact() {
   }
 
   if (triggerBtn && menu) {
+    const setMenuState = (open) => {
+      triggerBtn.setAttribute("aria-expanded", String(open));
+      menu.setAttribute("aria-hidden", String(!open));
+      menu.classList.toggle("is-open", open);
+      menu.querySelectorAll("a").forEach((link) => {
+        link.tabIndex = open ? 0 : -1;
+      });
+    };
+
+    // Initialize closed state cleanly for keyboard accessibility (R-32)
+    setMenuState(false);
+
     triggerBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       const isExpanded = triggerBtn.getAttribute("aria-expanded") === "true";
-      triggerBtn.setAttribute("aria-expanded", String(!isExpanded));
-      menu.classList.toggle("hidden");
+      setMenuState(!isExpanded);
     });
 
     document.addEventListener("click", (e) => {
-      if (!container.contains(e.target)) {
-        menu.classList.add("hidden");
-        triggerBtn.setAttribute("aria-expanded", "false");
+      if (!container.contains(e.target) && menu.classList.contains("is-open")) {
+        setMenuState(false);
       }
     });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !menu.classList.contains("hidden")) {
-        menu.classList.add("hidden");
-        triggerBtn.setAttribute("aria-expanded", "false");
+      if (e.key === "Escape" && menu.classList.contains("is-open")) {
+        setMenuState(false);
         triggerBtn.focus();
       }
     });
@@ -1020,18 +1046,20 @@ function initScrollSpy() {
           return;
         }
 
-        const focalY = scrollY + 180;
+        const focalY = scrollY + viewportHeight * 0.35;
         let activeId = "";
 
         sections.forEach((sec) => {
+          const secId = sec.getAttribute("id");
+          if (secId === "home") return;
           const top = sec.offsetTop;
           const height = sec.offsetHeight;
           if (focalY >= top && focalY < top + height) {
-            activeId = sec.getAttribute("id");
+            activeId = secId;
           }
         });
 
-        if (!activeId && scrollY < 320) {
+        if (!activeId && scrollY < viewportHeight * 0.65) {
           const firstLink = document.querySelector(".nav-pill-link");
           if (firstLink) {
             setActiveNavLink(firstLink.getAttribute("href"));
@@ -1233,11 +1261,11 @@ function refreshScrollMotionTargets() {
 
   // Daftar grup elemen dengan karakter gerak berbeda per section (R-19)
   const motionGroups = [
-    { selector: "#projects > div:first-child, #about > div:first-child > :not(#about-paragraphs), #experience > div:first-child, #contact > h2, #contact > p, #contact > div:first-child", motion: "editorial", stagger: 65 },
+    { selector: "#projects > div:first-child, #about > div:first-child > :not(#about-paragraphs), #about > div:last-child > div:first-child, #experience > div:first-child, #contact > h2, #contact > p, #contact > div:first-child", motion: "editorial", stagger: 65 },
     { selector: "#about-paragraphs > p", motion: "editorial", stagger: 85 },
     { selector: "#about-principles > div", motion: "scale", stagger: 95 },
-    { selector: "#experience-timeline .timeline-item", motion: "slide-right", stagger: 110 },
-    { selector: "#contact > .inline-flex, #contact > div:last-child, footer > div", motion: "scale", stagger: 80 },
+    { selector: "#experience-timeline .timeline-item-body", motion: "slide-right", stagger: 110 },
+    { selector: "#contact > .inline-flex, #contact > div:last-child", motion: "scale", stagger: 80 },
   ];
 
   const seen = new Set();
@@ -1275,13 +1303,13 @@ function updateContinuousScrollVisuals(currentY) {
   const docMax = Math.max(1, document.documentElement.scrollHeight - vh);
   const docProgress = clamp01(currentY / docMax);
 
-  // 1. Drift halus diagonal light beams di background sesuai scroll (00:00-00:06 referensi)
-  const rootStyle = document.documentElement.style;
-  rootStyle.setProperty("--bg-shift-x", `${(-docProgress * 72).toFixed(2)}px`);
-  rootStyle.setProperty("--bg-shift-y", `${(docProgress * 56).toFixed(2)}px`);
+  // 1. Sync scroll progress with the minimalist interactive 3D contour & rim-light background
+  if (typeof notifyInteractiveBgScroll === "function") {
+    notifyInteractiveBgScroll(docProgress);
+  }
 
-  // 2. Parallax exit halus pada Hero saat di-scroll turun, kembali tajam saat scroll naik
-  const heroExit = clamp01(currentY / Math.min(540, vh * 0.68));
+  // 2. Parallax exit halus pada full-viewport Hero saat di-scroll turun, kembali tajam saat scroll naik
+  const heroExit = clamp01(currentY / Math.max(360, vh * 0.82));
   const heroSplit = document.querySelector(".hero-split-layout");
   if (heroSplit) {
     heroSplit.style.setProperty("--hero-exit", heroExit.toFixed(4));
@@ -1409,4 +1437,315 @@ function initScrollChoreography() {
     smoothScrollY = window.scrollY;
     updateContinuousScrollVisuals(smoothScrollY);
   }, { passive: true });
+}
+
+/* ==============================================================================
+   14. MINIMALIST INTERACTIVE 3D STUDIO RIM-LIGHT & CONTOUR BACKGROUND
+   - Designed for a 3D Generalist / LRC (Lighting, Rendering, Compositing) portfolio
+   - Demand-driven 60fps physics: animates on pointer move, click ripple, & scroll,
+     then settles to zero-CPU rest when input stops (R-19 / R-39 compliant)
+   - Restrained & uncluttered: 5 hair-thin 3D spline contours that magnetically
+     deflect and catch a specular rim light near the cursor, plus 18 sparse depth
+     vertices and subtle click light pulses
+   ============================================================================== */
+let notifyInteractiveBgScroll = null;
+
+function initInteractiveBackground() {
+  const canvas = document.getElementById("interactive-bg-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  let width = window.innerWidth || 1280;
+  let height = window.innerHeight || 800;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  // Normalized & pixel pointer coordinates with damped spring inertia
+  let targetX = width * 0.68;
+  let targetY = height * 0.36;
+  let currentX = targetX;
+  let currentY = targetY;
+  let pointerPresence = 0.55;
+  let targetPresence = 0.55;
+
+  // Scroll progress (0 at top -> 1 at bottom)
+  let bgScrollProgress = 0;
+
+  // Click / Tap expanding studio light ripples
+  const ripples = [];
+  let bgRafId = null;
+
+  // 5 Minimalist 3D Contour Splines (wide spacing, calm studio composition)
+  const contourLines = [
+    { yRatio: 0.28, amp: 26, freq: 1.05, phase: 0.4, depth: 0.45, baseAlpha: 0.026, rimAlpha: 0.16 },
+    { yRatio: 0.44, amp: 34, freq: 1.18, phase: 1.35, depth: 0.65, baseAlpha: 0.032, rimAlpha: 0.2 },
+    { yRatio: 0.60, amp: 42, freq: 1.28, phase: 2.25, depth: 0.85, baseAlpha: 0.04, rimAlpha: 0.25 },
+    { yRatio: 0.75, amp: 36, freq: 1.12, phase: 3.1, depth: 1.0, baseAlpha: 0.045, rimAlpha: 0.28 },
+    { yRatio: 0.88, amp: 28, freq: 0.96, phase: 4.05, depth: 0.72, baseAlpha: 0.032, rimAlpha: 0.18 },
+  ];
+
+  // 18 Sparse 3D Depth Vertices (deterministic studio layout, mostly peripheral so center stays clean)
+  const vertices = [
+    { u: 0.08, v: 0.16, z: 0.35, size: 1.2 },
+    { u: 0.18, v: 0.28, z: 0.62, size: 1.5 },
+    { u: 0.11, v: 0.52, z: 0.48, size: 1.3 },
+    { u: 0.22, v: 0.74, z: 0.82, size: 1.6 },
+    { u: 0.09, v: 0.86, z: 0.4, size: 1.2 },
+    { u: 0.34, v: 0.14, z: 0.52, size: 1.3 },
+    { u: 0.38, v: 0.84, z: 0.74, size: 1.5 },
+    { u: 0.52, v: 0.12, z: 0.38, size: 1.2 },
+    { u: 0.56, v: 0.89, z: 0.66, size: 1.4 },
+    { u: 0.68, v: 0.18, z: 0.78, size: 1.6 },
+    { u: 0.74, v: 0.34, z: 0.44, size: 1.2 },
+    { u: 0.66, v: 0.76, z: 0.58, size: 1.4 },
+    { u: 0.84, v: 0.15, z: 0.5, size: 1.3 },
+    { u: 0.91, v: 0.32, z: 0.88, size: 1.7 },
+    { u: 0.82, v: 0.54, z: 0.7, size: 1.5 },
+    { u: 0.93, v: 0.68, z: 0.42, size: 1.2 },
+    { u: 0.86, v: 0.84, z: 0.92, size: 1.7 },
+    { u: 0.46, v: 0.48, z: 0.3, size: 1.1 },
+  ];
+
+  function resizeCanvas() {
+    width = window.innerWidth || 1280;
+    height = window.innerHeight || 800;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    renderFrame();
+  }
+
+  function buildSplinePoints(line) {
+    const segments = width < 640 ? 20 : 30;
+    const pts = [];
+    const scrollOffsetY = (bgScrollProgress - 0.5) * -95 * line.depth;
+    const scrollPhase = bgScrollProgress * 1.65 * line.depth;
+    const parallaxX = ((currentX / Math.max(1, width)) - 0.5) * -24 * line.depth;
+    const parallaxY = ((currentY / Math.max(1, height)) - 0.5) * -18 * line.depth;
+    const influenceRadius = Math.min(width, height) * 0.32;
+
+    for (let i = 0; i <= segments; i++) {
+      const t = i / segments;
+      const x = -40 + t * (width + 80) + parallaxX;
+
+      // Clean architectural S-curve contour
+      const wave1 = Math.sin(t * Math.PI * line.freq + line.phase + scrollPhase) * line.amp;
+      const wave2 = Math.cos(t * Math.PI * (line.freq * 1.7) - line.phase * 0.6 + scrollPhase * 0.7) * (line.amp * 0.38);
+      let y = height * line.yRatio + wave1 + wave2 + scrollOffsetY + parallaxY;
+
+      // Magnetic 3D spline deflection away from cursor
+      const dx = x - currentX;
+      const dy = y - currentY;
+      const dist = Math.hypot(dx, dy);
+      if (dist < influenceRadius) {
+        const falloff = 1 - dist / influenceRadius;
+        const smoothPush = falloff * falloff * (3 - 2 * falloff);
+        const dirY = dy >= 0 ? 1 : -1;
+        const pushStrength = (dy === 0 ? 1 : dirY * Math.min(1, Math.abs(dy) / 48));
+        y += smoothPush * pushStrength * 26 * line.depth * pointerPresence;
+      }
+
+      // Click ripple wave deflection
+      for (let r = 0; r < ripples.length; r++) {
+        const rip = ripples[r];
+        const rDist = Math.hypot(x - rip.x, y - rip.y);
+        const band = Math.abs(rDist - rip.radius);
+        if (band < 58) {
+          const waveFactor = Math.cos((band / 58) * (Math.PI * 0.5));
+          const sign = y >= rip.y ? 1 : -1;
+          y += sign * waveFactor * rip.alpha * 22 * line.depth;
+        }
+      }
+
+      pts.push({ x, y });
+    }
+    return pts;
+  }
+
+  function traceSmoothCurve(pts) {
+    if (pts.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 0; i < pts.length - 1; i++) {
+      const xc = (pts[i].x + pts[i + 1].x) * 0.5;
+      const yc = (pts[i].y + pts[i + 1].y) * 0.5;
+      ctx.quadraticCurveTo(pts[i].x, pts[i].y, xc, yc);
+    }
+    const last = pts[pts.length - 1];
+    ctx.lineTo(last.x, last.y);
+  }
+
+  function renderFrame() {
+    ctx.clearRect(0, 0, width, height);
+
+    // 1. Soft Studio Key-Light following cursor (LRC Lighting pass)
+    const lightRadius = Math.max(340, Math.min(width, height) * 0.52);
+    const keyLight = ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, lightRadius);
+    const keyAlpha = (0.048 + pointerPresence * 0.032).toFixed(4);
+    keyLight.addColorStop(0, `rgba(226, 232, 240, ${keyAlpha})`);
+    keyLight.addColorStop(0.45, `rgba(148, 163, 184, ${(keyAlpha * 0.38).toFixed(4)})`);
+    keyLight.addColorStop(1, "rgba(8, 8, 10, 0)");
+    ctx.fillStyle = keyLight;
+    ctx.fillRect(0, 0, width, height);
+
+    // 2. Sculpted 3D Contour Splines (Base Graphite Pass + Cursor Specular Rim Pass)
+    const rimRadius = Math.max(240, Math.min(width, height) * 0.34);
+    for (let i = 0; i < contourLines.length; i++) {
+      const line = contourLines[i];
+      const pts = buildSplinePoints(line);
+
+      // Pass A: Whisper-thin base contour
+      traceSmoothCurve(pts);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${line.baseAlpha})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Pass B: Specular Rim Reflection near cursor
+      const rimGrad = ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, rimRadius);
+      const peakRim = (line.rimAlpha * (0.65 + pointerPresence * 0.35)).toFixed(4);
+      rimGrad.addColorStop(0, `rgba(248, 250, 252, ${peakRim})`);
+      rimGrad.addColorStop(0.55, `rgba(203, 213, 225, ${(peakRim * 0.35).toFixed(4)})`);
+      rimGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+      ctx.strokeStyle = rimGrad;
+      ctx.lineWidth = 1.35;
+      ctx.stroke();
+    }
+
+    // 3. Sparse 3D Parallax Depth Vertices
+    const normX = (currentX / Math.max(1, width)) - 0.5;
+    const normY = (currentY / Math.max(1, height)) - 0.5;
+    for (let i = 0; i < vertices.length; i++) {
+      const v = vertices[i];
+      const vx = v.u * width - normX * 42 * v.z;
+      let vy = (v.v * height - normY * 34 * v.z - bgScrollProgress * 75 * v.z) % height;
+      if (vy < 0) vy += height;
+
+      const dist = Math.hypot(vx - currentX, vy - currentY);
+      const proximity = Math.max(0, 1 - dist / (rimRadius * 0.95));
+      const alpha = 0.07 + v.z * 0.08 + proximity * 0.26 * pointerPresence;
+
+      ctx.fillStyle = `rgba(226, 232, 240, ${alpha.toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(vx, vy, v.size + proximity * 0.55, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Subtle 3D viewport vertex crosshair on illuminated nodes
+      if (proximity > 0.32) {
+        const crossAlpha = ((proximity - 0.32) * 0.28 * pointerPresence).toFixed(3);
+        ctx.strokeStyle = `rgba(248, 250, 252, ${crossAlpha})`;
+        ctx.lineWidth = 0.75;
+        ctx.beginPath();
+        ctx.moveTo(vx - 4.5, vy);
+        ctx.lineTo(vx + 4.5, vy);
+        ctx.moveTo(vx, vy - 4.5);
+        ctx.lineTo(vx, vy + 4.5);
+        ctx.stroke();
+      }
+    }
+
+    // 4. Interactive Click / Tap Studio Light Ripples
+    for (let i = 0; i < ripples.length; i++) {
+      const rip = ripples[i];
+      ctx.strokeStyle = `rgba(226, 232, 240, ${(rip.alpha * 0.24).toFixed(4)})`;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  function stepInteractiveBg() {
+    if (reducedMotionQuery.matches) {
+      bgRafId = null;
+      renderFrame();
+      return;
+    }
+
+    const dx = targetX - currentX;
+    const dy = targetY - currentY;
+    const dp = targetPresence - pointerPresence;
+
+    currentX += dx * 0.09;
+    currentY += dy * 0.09;
+    pointerPresence += dp * 0.08;
+
+    for (let i = ripples.length - 1; i >= 0; i--) {
+      ripples[i].radius += 6.2;
+      ripples[i].alpha *= 0.93;
+      if (ripples[i].alpha < 0.015 || ripples[i].radius > 340) {
+        ripples.splice(i, 1);
+      }
+    }
+
+    renderFrame();
+
+    const stillMoving =
+      Math.abs(dx) > 0.2 ||
+      Math.abs(dy) > 0.2 ||
+      Math.abs(dp) > 0.01 ||
+      ripples.length > 0;
+
+    if (stillMoving) {
+      bgRafId = window.requestAnimationFrame(stepInteractiveBg);
+    } else {
+      bgRafId = null;
+    }
+  }
+
+  function requestInteractiveFrame() {
+    if (reducedMotionQuery.matches) {
+      renderFrame();
+      return;
+    }
+    if (bgRafId === null) {
+      bgRafId = window.requestAnimationFrame(stepInteractiveBg);
+    }
+  }
+
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      targetPresence = 1;
+      requestInteractiveFrame();
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "pointerdown",
+    (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+      targetPresence = 1;
+      if (!reducedMotionQuery.matches) {
+        ripples.push({ x: e.clientX, y: e.clientY, radius: 6, alpha: 1 });
+        if (ripples.length > 3) ripples.shift();
+      }
+      requestInteractiveFrame();
+    },
+    { passive: true }
+  );
+
+  document.addEventListener(
+    "pointerleave",
+    () => {
+      targetPresence = 0.45;
+      requestInteractiveFrame();
+    },
+    { passive: true }
+  );
+
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+
+  notifyInteractiveBgScroll = (docProgress) => {
+    bgScrollProgress = docProgress;
+    requestInteractiveFrame();
+  };
+
+  resizeCanvas();
 }

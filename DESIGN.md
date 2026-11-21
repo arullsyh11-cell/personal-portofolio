@@ -11,7 +11,7 @@
 
 ## 3. Palette & Color Decisions (R-01, R-29)
 - **Primary Background (`#08080A` to `#0E0E12`):** Deep charcoal base engineered to frame 3D renders and web app screenshots accurately while providing maximum contrast.
-- **Glossy Light Streaks Texture:** Multi-angle linear gradient sheen simulates polished dark glass reflection without using generic blueprint or grid slop.
+- **Minimalist Interactive 3D LRC Studio Rim-Light & Contour Background (`#interactive-bg-canvas`):** Demand-driven HTML5 Canvas background tailored to the 3D Generalist & LRC (Lighting, Rendering, Compositing) identity. Features a soft cursor-tracked studio key light, 5 hair-thin (`1px`) 3D spline contours that magnetically deflect and catch a satin-silver specular rim reflection near the cursor, 18 sparse 3D parallax depth vertices, and subtle click/tap light ripple waves. Settles to a zero-CPU rest state when user input stops and honors `prefers-reduced-motion: reduce` (R-07, R-19, R-25, R-39).
 - **Primary Text (`#F8FAFC`):** Crisp white providing a contrast ratio of > 15:1 against `#08080A`, exceeding WCAG AA and AAA requirements.
 - **Secondary Text (`#94A3B8`):** Metallic slate gray ensuring high legibility (contrast ratio > 7:1) while establishing clear typographic hierarchy.
 - **Borders (`rgba(255, 255, 255, 0.08)` to `0.24`):** Hairline precision borders providing structural definition without heavy solid outlines.
