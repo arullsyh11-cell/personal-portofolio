@@ -297,83 +297,47 @@ function isPendingUrl(url) {
 }
 
 /**
- * Menghasilkan tombol aksi GitHub & Live Demo pada footer kartu proyek
+ * Menghasilkan tombol aksi Live Demo pada footer kartu proyek
  */
 function renderProjectCardLinksHTML(variant) {
-  if (!variant.githubUrl && !variant.liveUrl) return "";
+  if (!variant.liveUrl) return "";
 
-  // TODO: Replace "#" placeholder URLs in data.js once TASKLY repository and live deployment are public.
-  const githubHTML = variant.githubUrl
-    ? isPendingUrl(variant.githubUrl)
-      ? `<button type="button" data-pending-link="Source Code"
-             class="inline-flex items-center gap-1.5 px-2.5 py-2 min-h-[38px] text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03] font-sans text-[11px] font-medium"
-             aria-label="Source Code (Coming soon)"
-             title="Source Code (Coming soon)">
-            ${icons.github}
-            <span>Soon</span>
-          </button>`
-      : `<a href="${variant.githubUrl}" target="_blank" rel="noopener noreferrer" 
-             class="w-9 h-9 min-h-[38px] inline-flex items-center justify-center text-slate-400 hover:text-white transition-colors rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.03]"
-             aria-label="View source code on GitHub">
-            ${icons.github}
-          </a>`
-    : "";
+  const liveHTML = isPendingUrl(variant.liveUrl)
+    ? `<button type="button" data-pending-link="Live Demo"
+           class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-slate-200 bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
+           aria-label="Live Demo (Coming soon)"
+           title="Live Demo (Coming soon)">
+          <span>Coming soon</span>
+        </button>`
+    : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
+           aria-label="Open live project preview">
+          <span>Live Demo</span>
+          ${icons.externalLink}
+        </a>`;
 
-  const liveHTML = variant.liveUrl
-    ? isPendingUrl(variant.liveUrl)
-      ? `<button type="button" data-pending-link="Live Demo"
-             class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-slate-200 bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-             aria-label="Live Demo (Coming soon)"
-             title="Live Demo (Coming soon)">
-            <span>Coming soon</span>
-          </button>`
-      : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
-             class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-             aria-label="Open live project preview">
-            <span>Live Demo</span>
-            ${icons.externalLink}
-          </a>`
-    : "";
-
-  return `${githubHTML}${liveHTML}`;
+  return liveHTML;
 }
 
 /**
- * Menghasilkan tombol aksi GitHub & Live Demo di footer modal proyek
+ * Menghasilkan tombol aksi Live Demo di footer modal proyek
  */
 function renderModalActionsHTML(variant) {
-  if (!variant.githubUrl && !variant.liveUrl) return "";
+  if (!variant.liveUrl) return "";
 
-  // TODO: Replace "#" placeholder URLs in data.js once TASKLY repository and live deployment are public.
-  const githubHTML = variant.githubUrl
-    ? isPendingUrl(variant.githubUrl)
-      ? `<button type="button" data-pending-link="Source Code"
-             class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors"
-             aria-label="Source Code (Coming soon)">
-            ${icons.github} <span class="ml-2">Source Code (Coming soon)</span>
-          </button>`
-      : `<a href="${variant.githubUrl}" target="_blank" rel="noopener noreferrer" 
-             class="btn-tap-target w-full sm:w-auto px-4 py-2 font-sans font-medium text-xs rounded-xl text-slate-200 hover:text-white border border-white/12 hover:border-white/25 bg-white/5 transition-colors">
-            ${icons.github} <span class="ml-2">Source Code</span>
-          </a>`
-    : "";
-
-  const liveHTML = variant.liveUrl
-    ? isPendingUrl(variant.liveUrl)
-      ? `<button type="button" data-pending-link="Visit Live Demo"
-             class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors"
-             aria-label="Live Demo (Coming soon)">
-            <span>Live Demo (Coming soon)</span>
-          </button>`
-      : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
-             class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
-            <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
-          </a>`
-    : "";
+  const liveHTML = isPendingUrl(variant.liveUrl)
+    ? `<button type="button" data-pending-link="Visit Live Demo"
+           class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors"
+           aria-label="Live Demo (Coming soon)">
+          <span>Live Demo (Coming soon)</span>
+        </button>`
+    : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
+           class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
+          <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
+        </a>`;
 
   return `
     <div class="pt-5 border-t border-white/10 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
-      ${githubHTML}
       ${liveHTML}
     </div>
   `;
