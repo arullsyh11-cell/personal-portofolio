@@ -168,7 +168,7 @@
       </section>
 
       <!-- ======================================================================
-           3. SELECTED PROJECTS (Full-Viewport Section with Category Filter)
+           3. SELECTED PROJECTS (Editorial Split-Row Showcase - 4 Curated Works)
            ====================================================================== -->
       <section id="projects"
         class="viewport-section min-h-[100dvh] flex flex-col justify-center pt-28 sm:pt-32 pb-20 px-4 sm:px-6 max-w-6xl mx-auto border-t border-white/[0.06]"
@@ -183,18 +183,149 @@
             </h2>
           </div>
 
-          <!-- Category Filter Tabs (Clean Segmented Pill Bar for Mobile & Desktop) -->
+          <!-- Category Filter Tabs (All / Frontend / 3D with Sliding Active Pill) -->
           <div
-            class="inline-flex flex-wrap items-center gap-1.5 p-1.5 rounded-full bg-[#0E0E12] border border-white/10 self-start sm:self-auto"
+            class="filter-tabs-bar relative inline-flex flex-wrap items-center gap-1 p-1.5 rounded-full bg-[#0E0E12] border border-white/10 self-start sm:self-auto"
             id="project-category-filters" role="group" aria-label="Filter projects by category">
-            <!-- Populated from data.js -->
+            <span id="filter-active-pill" class="filter-active-pill" aria-hidden="true"></span>
+            <button type="button" data-category="All" aria-pressed="true"
+              class="category-filter-btn is-active focus-visible:outline-none">All</button>
+            <button type="button" data-category="Frontend" aria-pressed="false"
+              class="category-filter-btn focus-visible:outline-none">Frontend</button>
+            <button type="button" data-category="3D" aria-pressed="false"
+              class="category-filter-btn focus-visible:outline-none">3D</button>
           </div>
         </div>
 
-        <!-- Projects Grid (2-3 columns with featured item hierarchy) -->
-        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Populated from data.js -->
+        <!-- Split-Row Editorial Project List (Left: Single 16:9 Image, Right: Numbered Details) -->
+        <div id="projects-grid" class="divide-y divide-white/[0.08] border-t border-b border-white/[0.08]">
+          <!-- Populated from data.js (4 curated projects: 01..04) -->
         </div>
+
+        <!-- Simple Accessible Lightbox for 3D Project Renders (Scoped inside #projects) -->
+        <div id="project-lightbox"
+          class="fixed inset-0 z-[70] hidden items-center justify-center p-4 sm:p-6 bg-[#050508]/95"
+          role="dialog" aria-modal="true" aria-labelledby="project-lightbox-title">
+          <div class="relative max-w-5xl w-full flex flex-col items-center" data-lightbox-panel>
+            <div class="w-full flex items-center justify-between gap-4 mb-3">
+              <p id="project-lightbox-title" class="text-sm sm:text-base font-semibold text-white truncate"></p>
+              <button type="button" id="project-lightbox-close"
+                class="modal-close-button focus-visible:outline-none"
+                aria-label="Close full image preview">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <img id="project-lightbox-img"
+              src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA="
+              alt="" width="1280" height="720"
+              class="max-h-[80vh] w-auto max-w-full object-contain rounded-xl border border-white/15 bg-[#0B0B0F] shadow-2xl">
+          </div>
+        </div>
+
+        <!-- Static SEO & Crawler Fallback when JavaScript is disabled (Exact 4 Curated Projects) -->
+        <noscript>
+          <div class="divide-y divide-white/[0.08] border-t border-b border-white/[0.08]">
+            <article class="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
+              <div class="hidden lg:block lg:col-span-1 font-mono text-xs text-slate-500 pt-1">01</div>
+              <div class="md:col-span-5 lg:col-span-5">
+                <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-[#111116]">
+                  <img src="assets/images/gymflow.png"
+                    alt="Tampilan dashboard utama aplikasi web kebugaran GYMFlow" width="800" height="450"
+                    loading="lazy" class="w-full h-full object-cover">
+                </div>
+              </div>
+              <div class="md:col-span-7 lg:col-span-6">
+                <div class="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">01 · Frontend</div>
+                <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">GYMFlow: Fitness &amp; Workout Tracking Web App</h3>
+                <p class="text-sm text-slate-300 leading-relaxed mb-4">Aplikasi web pencatat jadwal, beban latihan, dan progres gym harian yang berjalan cepat di browser dengan JavaScript dan penyimpanan LocalStorage.</p>
+                <div class="flex flex-wrap gap-1.5 mb-5">
+                  <span class="tech-pill">JavaScript</span>
+                  <span class="tech-pill">HTML</span>
+                  <span class="tech-pill">CSS</span>
+                  <span class="tech-pill">LocalStorage API</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <a href="https://gymflow.my.id/" target="_blank" rel="noopener noreferrer"
+                    class="px-4 py-2 rounded-xl bg-white text-black font-semibold text-xs">Live Demo</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
+              <div class="hidden lg:block lg:col-span-1 font-mono text-xs text-slate-500 pt-1">02</div>
+              <div class="md:col-span-5 lg:col-span-5">
+                <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-[#111116]">
+                  <img src="assets/images/taskly.webp"
+                    alt="Tampilan dashboard utama workspace manajemen tugas TASKLY" width="800" height="450"
+                    loading="lazy" class="w-full h-full object-cover">
+                </div>
+              </div>
+              <div class="md:col-span-7 lg:col-span-6">
+                <div class="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">02 · Frontend</div>
+                <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">TASKLY: Focused Task &amp; Sprint Productivity App</h3>
+                <p class="text-sm text-slate-300 leading-relaxed mb-4">Aplikasi produktivitas untuk pengelolaan tugas harian, ringkasan progres sprint, pencarian label cepat, dan Focus Mode dengan antarmuka gelap yang tenang.</p>
+                <div class="flex flex-wrap gap-1.5 mb-5">
+                  <span class="tech-pill">React</span>
+                  <span class="tech-pill">Vite</span>
+                  <span class="tech-pill">Tailwind CSS</span>
+                  <span class="tech-pill">Lucide React</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <a href="https://taskly-beta-opal.vercel.app/" target="_blank" rel="noopener noreferrer"
+                    class="px-4 py-2 rounded-xl bg-white text-black font-semibold text-xs">Live Demo</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
+              <div class="hidden lg:block lg:col-span-1 font-mono text-xs text-slate-500 pt-1">03</div>
+              <div class="md:col-span-5 lg:col-span-5">
+                <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-[#111116]">
+                  <img src="assets/images/lighting.webp"
+                    alt="Render 3D LRC studi pencahayaan dan bayangan arsitektural pada deretan patung klasik" width="800"
+                    height="450" loading="lazy" class="w-full h-full object-cover">
+                </div>
+              </div>
+              <div class="md:col-span-7 lg:col-span-6">
+                <div class="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">03 · 3D</div>
+                <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">LRC: Lighting, Rendering &amp; Compositing</h3>
+                <p class="text-sm text-slate-300 leading-relaxed mb-4">Studi tata pencahayaan dramatis, pemodelan arah bayangan natural, dan compositing multi-pass untuk membangun mood arsitektural serta kedalaman ruang 3D.</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="tech-pill">3D Lighting</span>
+                  <span class="tech-pill">Rendering &amp; Shading</span>
+                  <span class="tech-pill">Compositing</span>
+                  <span class="tech-pill">Blender</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start">
+              <div class="hidden lg:block lg:col-span-1 font-mono text-xs text-slate-500 pt-1">04</div>
+              <div class="md:col-span-5 lg:col-span-5">
+                <div class="w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-[#111116]">
+                  <img src="assets/images/cinematic-lrc.webp"
+                    alt="Render akhir Cinematic Environment &amp; LookDev Showcase dengan pencahayaan senja ACEScg"
+                    width="800" height="450" loading="lazy" class="w-full h-full object-cover">
+                </div>
+              </div>
+              <div class="md:col-span-7 lg:col-span-6">
+                <div class="font-mono text-[11px] uppercase tracking-widest text-slate-400 mb-2">04 · 3D</div>
+                <h3 class="text-xl sm:text-2xl font-bold text-white mb-3">Cinematic Environment &amp; LookDev Showcase</h3>
+                <p class="text-sm text-slate-300 leading-relaxed mb-4">Eksplorasi pencahayaan sinematik, material look development, dan compositing multi-pass EXR menggunakan color pipeline ACEScg untuk scene karakter 3D.</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="tech-pill">3D Lighting</span>
+                  <span class="tech-pill">Rendering &amp; Shading</span>
+                  <span class="tech-pill">Compositing</span>
+                  <span class="tech-pill">Blender</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </noscript>
 
       </section>
 

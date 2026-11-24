@@ -84,160 +84,269 @@ const portfolioData = {
   // ----------------------------------------------------------------------------
   // 5. Selected Projects (Daftar Proyek Pilihan)
   // ----------------------------------------------------------------------------
-  projectCategories: ["All", "3D & LRC", "Web Apps"],
+  projectCategories: ["All", "Frontend", "3D"],
 
   projects: [
     {
-      id: "project-1",
+      id: "project-gymflow",
+      order: 1,
+      visible: true,
       title: "GYMFlow: Fitness & Workout Tracking Web App",
-      category: "Web Apps",
-      featured: true, // Proyek unggulan mendapatkan ukuran kartu yang lebih luas
-      badge: "Fitness Web App",
-      image: "assets/images/gymflow.png", // Ganti dengan file gambar Anda (misal: assets/images/gymflow.png)
-      shortDescription:
-        "Aplikasi web kebugaran untuk pelacakan volume latihan gym harian, visualisasi grafik progres mingguan, dan manajemen rutinitas latihan berbasis React JS.",
+      description:
+        "Aplikasi web pencatat jadwal, beban latihan, dan progres gym harian yang berjalan cepat di browser dengan JavaScript dan penyimpanan LocalStorage.",
       fullDescription:
-        "GYMFlow dirancang untuk mempermudah pencatatan sesi gym harian tanpa hambatan input yang rumit. Dibangun menggunakan React JS dengan arsitektur komponen modular, visualisasi grafik performa latihan, dan manajemen state reaktif untuk pelacakan volume beban latihan secara real-time.",
-      techStack: ["JavaScript", "CSS", "HTML", "LocalStorage API"],
-      githubUrl: "https://github.com/arullsyh11-cell/arullsyh11-cell.github.io",
-      liveUrl: "https://gymflow.my.id/",
+        "GYMFlow dirancang untuk mempermudah pencatatan sesi gym harian tanpa hambatan input yang rumit. Dibangun menggunakan HTML, CSS, Vanilla JavaScript, dan LocalStorage API dengan visualisasi grafik performa latihan serta pelacakan volume beban secara real-time.",
+      category: "Frontend",
+      tech: ["JavaScript", "HTML", "CSS", "LocalStorage API"],
+      image: "assets/images/gymflow.png",
+      imageAlt: "Tampilan dashboard utama aplikasi web kebugaran GYMFlow",
+      demoUrl: "https://gymflow.my.id/",
+      repoUrl: "https://github.com/arullsyh11-cell/arullsyh11-cell.github.io",
+      featured: true,
       metrics: "State-driven workout log with instant responsive telemetry",
     },
     {
-      id: "project-2",
-      title: "ORBIT: Minimalist Productivity & Workspace",
-      category: "Web Apps",
-      featured: false,
-      badge: "Productivity App",
-      image: "assets/images/orbit.png",
-      // Daftar karya kategori Productivity (ORBIT & TASKLY) yang tampil bertumpuk dan berganti lengkap dengan deskripsinya saat digeser / di-scroll:
-      portfolioStack: [
-        {
-          title: "ORBIT · Productivity Workspace",
-          projectTitle: "ORBIT: Minimalist Productivity & Workspace",
-          image: "assets/images/orbit.png",
-          shortDescription:
-            "Aplikasi produktivitas berbasis web dengan sistem kanban board responsif, pelacak sprint tugas, dan mode fokus timer yang dibangun menggunakan arsitektur state client-side.",
-          fullDescription:
-            "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer dengan antarmuka monokrom yang bersih, cepat, dan bebas dari distraksi.",
-          techStack: ["JavaScript", "CSS", "HTML", "LocalStorage API"],
-          githubUrl: "https://github.com/arullsyh11-cell/ORBIT",
-          liveUrl: "https://dayflow-flax.vercel.app/",
-          metrics: "Sub-100ms interaction latency with zero UI bloat",
-        },
-        {
-          title: "TASKLY · Focus & Sprint Workspace",
-          projectTitle: "TASKLY: Focused Task & Sprint Productivity App",
-          image: "assets/images/taskly.webp",
-          shortDescription:
-            "Aplikasi produktivitas modern untuk pengelolaan tugas harian, ringkasan progres sprint, pencarian label cepat, dan Focus Mode dengan React 19, Vite 6, serta React Router v7.",
-          fullDescription:
-            "TASKLY menghadirkan ringkasan alur kerja harian (Total & Selesai, Berjalan, Fokus Hari Ini, Terlambat), fitur Quick Add Task, perencanaan sprint, pencarian tugas instan, serta Focus Mode khusus. Dibangun menggunakan React 19, Vite 6, React Router v7, Tailwind CSS, CSS Variables Design Tokens, dan ikon Lucide React.",
-          techStack: [
-            "React",
-            "Vite",
-            "Tailwind CSS",
-            "Lucide React",
-          ],
-          githubUrl: "https://github.com/arullsyh11-cell/TASKLY", // TODO: Isi URL repository GitHub TASKLY di sini
-          liveUrl: "https://taskly-beta-opal.vercel.app/", // TODO: Isi URL Live Demo TASKLY di sini
-          metrics: "Token-driven dark workspace with sprint tracking & Focus Mode",
-        },
-      ],
-      shortDescription:
-        "Aplikasi produktivitas berbasis web dengan sistem kanban board responsif, pelacak sprint tugas, dan mode fokus timer yang dibangun menggunakan arsitektur state client-side.",
+      id: "project-taskly",
+      order: 2,
+      visible: true,
+      title: "TASKLY: Focused Task & Sprint Productivity App",
+      description:
+        "Aplikasi produktivitas untuk pengelolaan tugas harian, ringkasan progres sprint, pencarian label cepat, dan Focus Mode dengan antarmuka gelap yang tenang.",
       fullDescription:
-        "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer dengan antarmuka monokrom yang bersih, cepat, dan bebas dari distraksi.",
-      techStack: ["JavaScript", "CSS", "HTML", "LocalStorage API"],
-      githubUrl: "https://github.com/arullsyh11-cell/ORBIT",
-      liveUrl: "https://dayflow-flax.vercel.app/",
-      metrics: "Sub-100ms interaction latency with zero UI bloat",
+        "TASKLY menghadirkan ringkasan alur kerja harian (Total & Selesai, Berjalan, Fokus Hari Ini, Terlambat), fitur Quick Add Task, perencanaan sprint, pencarian tugas instan, serta Focus Mode khusus. Dibangun menggunakan React 19, Vite 6, React Router v7, Tailwind CSS, CSS Variables Design Tokens, dan ikon Lucide React.",
+      category: "Frontend",
+      tech: ["React", "Vite", "Tailwind CSS", "Lucide React"],
+      image: "assets/images/taskly.webp",
+      imageAlt: "Tampilan dashboard utama workspace manajemen tugas TASKLY",
+      demoUrl: "https://taskly-beta-opal.vercel.app/",
+      repoUrl: "https://github.com/arullsyh11-cell/TASKLY",
+      featured: false,
+      metrics: "Token-driven dark workspace with sprint tracking & Focus Mode",
     },
     {
-      id: "project-3",
+      id: "project-lrc",
+      order: 3,
+      visible: true,
+      // TODO: Sesuaikan judul/deskripsi khusus karya LRC ini bila diperlukan
+      title: "LRC: Lighting, Rendering & Compositing",
+      description:
+        "Studi tata pencahayaan dramatis, pemodelan arah bayangan natural, dan compositing multi-pass untuk membangun mood arsitektural serta kedalaman ruang 3D.",
+      fullDescription:
+        "Karya 3D Lighting, Rendering, and Compositing (LRC) yang berfokus pada penataan kontras cahaya terarah, jatuhnya bayangan lembut pada permukaan patung klasik, serta final grading compositing.",
+      category: "3D",
+      tech: ["3D Lighting", "Rendering & Shading", "Compositing", "Blender"],
+      image: "assets/images/lighting.webp",
+      imageAlt: "Render 3D LRC studi pencahayaan dan bayangan arsitektural pada deretan patung klasik",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+      metrics: "Directional light shafts and controlled shadow falloff study",
+    },
+    {
+      id: "project-cinematic-lrc",
+      order: 4,
+      visible: true,
       title: "Cinematic Environment & LookDev Showcase",
-      category: "3D & LRC",
-      featured: true,
-      badge: "3D LRC Production",
-      image: "assets/images/cinematic-lrc.webp",
-      // Daftar karya portofolio 3D & LRC yang tampil bertumpuk (Stacked Deck) dan berganti saat digeser / di-scroll:
-      portfolioStack: [
-        {
-          title: "Final ACEScg Beauty Composite",
-          image: "assets/images/cinematic-lrc.webp",
-        },
-        {
-          title: "Multi-Pass Lighting & Shader Breakdown",
-          image: "assets/images/cinematic-lrc-2.webp",
-        },
-        {
-          title: "Atmosphere & Depth Compositing Pass",
-          image: "assets/images/cinematic-lrc-3.webp",
-        },
-        {
-          title: "The Beauty of Ancient Sculptures",
-          image: "assets/images/lighting.webp"
-        },
-        {
-          title: "Capturing Timeless Moments",
-          image: "assets/images/Camera.webp"
-        },
-      ],
-      shortDescription:
-        "Eksplorasi pencahayaan sinematik (lighting), material look development, dan compositing untuk lingkungan 3D realistis menggunakan color pipeline ACEScg.",
+      description:
+        "Eksplorasi pencahayaan sinematik, material look development, dan compositing multi-pass EXR menggunakan color pipeline ACEScg untuk scene karakter 3D.",
       fullDescription:
         "Proyek 3D Lighting, Rendering, and Compositing (LRC) yang memfokuskan pada penataan mood visual, pemodelan cahaya natural dan artificial (three-point and rim lighting), multi-pass EXR rendering (beauty, diffuse, specular, crypto, ambient occlusion), serta final grading compositing.",
-      techStack: ["3D Lighting", "Rendering & Shading", "Compositing", "Blender"],
-      githubUrl: null,
-      liveUrl: null,
+      category: "3D",
+      tech: ["3D Lighting", "Rendering & Shading", "Compositing", "Blender"],
+      image: "assets/images/cinematic-lrc.webp",
+      imageAlt: "Render akhir Cinematic Environment & LookDev Showcase dengan pencahayaan senja ACEScg",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
       metrics: "High dynamic range lighting with 32-bit multi-channel EXR compositing",
     },
     {
-      id: "project-4",
-      title: "Hard Surface Assets & Scene Assembly",
-      category: "3D & LRC",
+      id: "project-orbit",
+      order: 5,
+      visible: false,
+      title: "ORBIT: Minimalist Productivity & Workspace",
+      description:
+        "Workspace produktivitas dengan kanban board, sprint tugas, dan timer.",
+      fullDescription:
+        "ORBIT mengintegrasikan alur kerja produktivitas mulai dari kanban boards, prioritasi sprint tugas, hingga mode focus timer dengan antarmuka monokrom yang bersih, cepat, dan bebas dari distraksi.",
+      category: "Frontend",
+      tech: ["JavaScript", "HTML", "CSS", "LocalStorage API"],
+      image: "assets/images/orbit.png",
+      demoUrl: "https://dayflow-flax.vercel.app/",
+      repoUrl: "https://github.com/arullsyh11-cell/ORBIT",
       featured: false,
-      badge: "3D Generalist",
-      image: "assets/images/Generalist-3d.webp",
-      // Daftar karya portofolio 3D Generalist yang tampil bertumpuk (Stacked Deck) dan berganti saat digeser / di-scroll:
-      portfolioStack: [
-        {
-          title: "Hard Surface SubD & Quad Topology",
-          image: "assets/images/Generalist-3d-4.webp",
-        },
-        {
-          title: "4K PBR Metallic & Weathering LookDev",
-          image: "assets/images/Generalist-3d-2.webp",
-        },
-        {
-          title: "Full Scene Assembly & Turntable Render",
-          image: "assets/images/Generalist-3d-3.webp",
-        },
-        {
-          title: "Engineering Heavy Machinery",
-          image: "assets/images/Generalist-3d-7.webp",
-        },
-        {
-          title: "Precision in Every Detail",
-          image: "assets/images/weapon-1.webp",
-        },
-        {
-          title: "Built for Heavy Operations",
-          image: "assets/images/Generalist-3d-5.webp",
-        },
-        {
-          title: "Exploring Mechanical Complexity",
-          image: "assets/images/Generalist-3d-6.webp"
-        }
-      ],
-      shortDescription:
-        "Pemodelan 3D hard surface dengan topologi quad bersih, pemetaan UV tanpa distorsi, tekstur PBR 4K, dan integrasi assembly aset ke dalam scene utuh.",
+      metrics: "Sub-100ms interaction latency with zero UI bloat",
+    },
+    {
+      id: "project-hard-surface",
+      order: 6,
+      visible: false,
+      title: "Hard Surface Assets & Scene Assembly",
+      description:
+        "Pemodelan 3D hard surface bertopologi quad bersih dan tekstur PBR 4K.",
       fullDescription:
         "Portofolio 3D Generalist yang mencakup alur kerja komprehensif mulai dari blockout, sub-division surface modeling, retopology quad bersih, baking normal map, penataan tekstur PBR procedural, hingga final stage presentation.",
-      techStack: ["3D Modeling", "SubD Topology", "3D Printing"],
-      githubUrl: null,
-      liveUrl: null,
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "3D Printing"],
+      image: "assets/images/Generalist-3d.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
       metrics: "Production-ready clean quad topology with optimized draw calls",
+    },
+    {
+      id: "project-ancient-sculptures",
+      order: 7,
+      visible: false,
+      title: "The Beauty of Ancient Sculptures",
+      description:
+        "Studi tata cahaya dramatis dan kontras bayangan pada patung klasik 3D.",
+      category: "3D",
+      tech: ["3D Lighting", "Rendering & Shading", "Compositing", "Blender"],
+      image: "assets/images/lighting.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-timeless-moments",
+      order: 8,
+      visible: false,
+      title: "Capturing Timeless Moments",
+      description:
+        "Eksplorasi shading material logam kamera klasik dengan cahaya studio.",
+      category: "3D",
+      tech: ["3D Lighting", "LookDev", "Rendering & Shading", "Blender"],
+      image: "assets/images/Camera.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-multipass-breakdown",
+      order: 9,
+      visible: false,
+      title: "Multi-Pass Lighting & Shader Breakdown",
+      description:
+        "Rincian multi-pass lighting, refleksi shader, dan grading karakter 3D.",
+      category: "3D",
+      tech: ["3D Lighting", "Rendering & Shading", "Compositing", "Blender"],
+      image: "assets/images/cinematic-lrc-2.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-atmosphere-depth",
+      order: 10,
+      visible: false,
+      title: "Atmosphere & Depth Compositing Pass",
+      description:
+        "Pengolahan kabut volumetrik dan kedalaman ruang pada compositing EXR.",
+      category: "3D",
+      tech: ["Compositing", "3D Lighting", "Rendering & Shading", "Blender"],
+      image: "assets/images/cinematic-lrc-3.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-subd-topology",
+      order: 11,
+      visible: false,
+      title: "Hard Surface SubD & Quad Topology",
+      description:
+        "Struktur pemodelan SubD presisi tinggi dengan alur topologi quad rapi.",
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "Blender"],
+      image: "assets/images/Generalist-3d-4.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-pbr-lookdev",
+      order: 12,
+      visible: false,
+      title: "4K PBR Metallic & Weathering LookDev",
+      description:
+        "Pengembangan material logam PBR 4K lengkap dengan detail aus permukaan.",
+      category: "3D",
+      tech: ["3D Modeling", "LookDev", "Substance Painter", "Blender"],
+      image: "assets/images/Generalist-3d-2.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-scene-turntable",
+      order: 13,
+      visible: false,
+      title: "Full Scene Assembly & Turntable Render",
+      description:
+        "Perakitan komponen kendaraan 3D utuh untuk presentasi turntable studio.",
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "Rendering & Shading"],
+      image: "assets/images/Generalist-3d-3.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-heavy-machinery",
+      order: 14,
+      visible: false,
+      title: "Engineering Heavy Machinery",
+      description:
+        "Pemodelan proporsi mekanis dan komponen artikulasi unit alat berat 3D.",
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "3D Printing"],
+      image: "assets/images/Generalist-3d-7.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-weapon-precision",
+      order: 15,
+      visible: false,
+      title: "Precision in Every Detail",
+      description:
+        "Pemodelan hard surface senjata dengan bevel tajam dan detail mekanis.",
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "Blender"],
+      image: "assets/images/weapon-1.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-heavy-operations",
+      order: 16,
+      visible: false,
+      title: "Built for Heavy Operations",
+      description:
+        "Konstruksi bodi kendaraan taktis 3D dengan topologi siap cetak dan rig.",
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "3D Printing"],
+      image: "assets/images/Generalist-3d-5.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
+    },
+    {
+      id: "project-mechanical-complexity",
+      order: 17,
+      visible: false,
+      title: "Exploring Mechanical Complexity",
+      description:
+        "Eksplorasi rakitan sambungan mekanik kompleks pada aset kendaraan 3D.",
+      category: "3D",
+      tech: ["3D Modeling", "SubD Topology", "3D Printing"],
+      image: "assets/images/Generalist-3d-6.webp",
+      demoUrl: "",
+      repoUrl: "",
+      featured: false,
     },
   ],
 

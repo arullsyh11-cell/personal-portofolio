@@ -8,6 +8,9 @@
  * ==============================================================================
  */
 
+// Tandai dukungan JavaScript pada <html> agar reveal tersembunyi hanya saat JS aktif (No-JS tetap terlihat penuh)
+document.documentElement.classList.add("js-enabled");
+
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof portfolioData === "undefined") {
     console.error("portfolioData tidak ditemukan. Pastikan data.js dimuat sebelum app.js.");
@@ -48,6 +51,7 @@ const icons = {
   layers: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>`,
   chevronLeft: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>`,
   chevronRight: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>`,
+  expand: `<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>`,
 };
 
 /* ==============================================================================
@@ -202,408 +206,444 @@ function initHeroSection() {
 }
 
 /* ==============================================================================
-   3. PROJECTS SECTION & 3D LAYERED STACKED PORTFOLIO SHOWCASE
+   3. PROJECTS SECTION (EDITORIAL SPLIT-ROW, SCROLL REVEAL & SLIDING FILTER PILL)
    ============================================================================== */
 let activeCategory = "All";
-// Menyimpan index slide aktif untuk masing-masing project 3D & LRC
-const projectStackState = {};
+let lightboxListenersBound = false;
+let lastLightboxTrigger = null;
+let filterBarInitialized = false;
+let projectRevealObserver = null;
+let filterTransitionToken = 0;
 
-let pendingLinkListenerBound = false;
+function prefersReducedMotion() {
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function isNonEmptyUrl(url) {
+  return typeof url === "string" && url.trim() !== "" && url.trim() !== "#";
+}
+
+function getCuratedVisibleProjects() {
+  const allProjects = Array.isArray(portfolioData.projects) ? portfolioData.projects : [];
+  return allProjects
+    .filter((p) => p.visible === true)
+    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+}
+
+function openProjectLightbox(src, title, alt, triggerEl) {
+  const lightbox = document.getElementById("project-lightbox");
+  const img = document.getElementById("project-lightbox-img");
+  const titleEl = document.getElementById("project-lightbox-title");
+  const closeBtn = document.getElementById("project-lightbox-close");
+  if (!lightbox || !img) return;
+
+  lastLightboxTrigger = triggerEl || document.activeElement;
+  img.src = src;
+  img.alt = alt || title || "Full size 3D render";
+  if (titleEl) titleEl.textContent = title || "";
+
+  lightbox.classList.remove("hidden");
+  lightbox.classList.add("flex");
+  document.body.style.overflow = "hidden";
+
+  if (closeBtn) closeBtn.focus();
+}
+
+function closeProjectLightbox() {
+  const lightbox = document.getElementById("project-lightbox");
+  if (!lightbox || lightbox.classList.contains("hidden")) return;
+
+  lightbox.classList.add("hidden");
+  lightbox.classList.remove("flex");
+  document.body.style.overflow = "";
+
+  if (lastLightboxTrigger && typeof lastLightboxTrigger.focus === "function") {
+    lastLightboxTrigger.focus();
+    lastLightboxTrigger = null;
+  }
+}
+
+function initProjectLightbox() {
+  if (lightboxListenersBound) return;
+  lightboxListenersBound = true;
+
+  const lightbox = document.getElementById("project-lightbox");
+  const closeBtn = document.getElementById("project-lightbox-close");
+  const gridContainer = document.getElementById("projects-grid");
+
+  // Pastikan lightbox berada di root body agar tidak tertutup stacking context .site-content
+  if (lightbox && lightbox.parentElement !== document.body) {
+    document.body.appendChild(lightbox);
+  }
+
+  if (gridContainer) {
+    gridContainer.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-lightbox-src]");
+      if (!btn) return;
+      openProjectLightbox(
+        btn.getAttribute("data-lightbox-src"),
+        btn.getAttribute("data-lightbox-title"),
+        btn.getAttribute("data-lightbox-alt"),
+        btn
+      );
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeProjectLightbox);
+  }
+
+  if (lightbox) {
+    lightbox.addEventListener("click", (e) => {
+      if (!e.target.closest("#project-lightbox-img") && !e.target.closest("#project-lightbox-close")) {
+        closeProjectLightbox();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox && !lightbox.classList.contains("hidden")) {
+      closeProjectLightbox();
+    }
+  });
+}
+
+/**
+ * Mengukur posisi & lebar tombol filter aktif lalu menggeser pill putih secara mulus
+ */
+function updateFilterPillPosition(immediate = false) {
+  const filterContainer = document.getElementById("project-category-filters");
+  const pill = document.getElementById("filter-active-pill");
+  if (!filterContainer || !pill) return;
+
+  const activeBtn = filterContainer.querySelector('.category-filter-btn[aria-pressed="true"]');
+  if (!activeBtn) return;
+
+  if (immediate || prefersReducedMotion()) {
+    pill.classList.add("no-transition");
+  }
+
+  pill.style.width = `${activeBtn.offsetWidth}px`;
+  pill.style.transform = `translate3d(${activeBtn.offsetLeft}px, 0, 0)`;
+  pill.classList.add("is-ready");
+
+  if (immediate && !prefersReducedMotion()) {
+    void pill.offsetWidth;
+    pill.classList.remove("no-transition");
+  }
+}
+
+/**
+ * Memicu animasi scroll reveal pada satu baris project lalu melepaskan observer (berjalan sekali)
+ */
+function revealProjectRow(row) {
+  if (!row || row.dataset.revealed === "true") return;
+  row.dataset.revealed = "true";
+
+  const targets = row.querySelectorAll(".reveal");
+  if (prefersReducedMotion()) {
+    targets.forEach((el) => {
+      el.classList.add("is-visible", "is-settled");
+    });
+    return;
+  }
+
+  // Double RAF memastikan browser sempat mengecat state awal (opacity 0) sebelum transisi berjalan lembut
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
+      targets.forEach((el) => {
+        el.classList.add("is-visible");
+        const onDone = (ev) => {
+          if (ev.target !== el) return;
+          el.classList.add("is-settled");
+          el.removeEventListener("transitionend", onDone);
+        };
+        el.addEventListener("transitionend", onDone);
+      });
+    });
+  });
+}
+
+/**
+ * Mengamati baris-baris project yang baru dirender menggunakan IntersectionObserver one-shot
+ */
+function observeProjectRows() {
+  const gridContainer = document.getElementById("projects-grid");
+  if (!gridContainer) return;
+
+  const rows = Array.from(gridContainer.querySelectorAll("article.project-split-row"));
+  if (rows.length === 0) return;
+
+  if (projectRevealObserver) {
+    projectRevealObserver.disconnect();
+    projectRevealObserver = null;
+  }
+
+  if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
+    rows.forEach((row) => revealProjectRow(row));
+    return;
+  }
+
+  projectRevealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        revealProjectRow(entry.target);
+        observer.unobserve(entry.target);
+      });
+    },
+    {
+      threshold: 0.15,
+      rootMargin: "0px 0px -60px 0px",
+    }
+  );
+
+  rows.forEach((row) => {
+    projectRevealObserver.observe(row);
+  });
+}
 
 function initProjectsSection() {
   renderProjectCategoryFilters();
   renderProjectCards();
+  initProjectLightbox();
+}
 
-  if (!pendingLinkListenerBound) {
-    pendingLinkListenerBound = true;
-    document.addEventListener("click", (e) => {
-      const pendingBtn = e.target.closest("[data-pending-link]");
-      if (!pendingBtn) return;
-      const label = pendingBtn.getAttribute("data-pending-link") || "Link";
-      showToast(`${label} will be available soon.`);
-    });
+function updateFilterButtonStates() {
+  const filterContainer = document.getElementById("project-category-filters");
+  if (!filterContainer) return;
+
+  const buttons = Array.from(filterContainer.querySelectorAll(".category-filter-btn"));
+  buttons.forEach((btn) => {
+    const isActive = btn.getAttribute("data-category") === activeCategory;
+    btn.setAttribute("aria-pressed", String(isActive));
+    btn.classList.toggle("is-active", isActive);
+  });
+}
+
+function switchProjectCategory(nextCategory) {
+  if (nextCategory === activeCategory) return;
+  activeCategory = nextCategory;
+
+  updateFilterButtonStates();
+  updateFilterPillPosition(false);
+
+  const gridContainer = document.getElementById("projects-grid");
+  if (!gridContainer) return;
+
+  const myToken = ++filterTransitionToken;
+
+  if (prefersReducedMotion()) {
+    renderProjectCards();
+    return;
   }
+
+  const currentRows = Array.from(gridContainer.querySelectorAll("article.project-split-row"));
+  if (currentRows.length === 0) {
+    renderProjectCards();
+    return;
+  }
+
+  // Fade out hanya baris yang tidak cocok selama 200ms sebelum diganti tanpa lompatan layout
+  const nonMatchingRows =
+    nextCategory === "All"
+      ? []
+      : currentRows.filter((row) => row.getAttribute("data-project-category") !== nextCategory);
+
+  if (nonMatchingRows.length === 0) {
+    // Kategori baru menambahkan baris (mis. Frontend -> All): pertahankan tinggi lalu render & reveal baris baru
+    const lockedHeight = gridContainer.offsetHeight;
+    gridContainer.style.minHeight = `${lockedHeight}px`;
+    renderProjectCards();
+    window.requestAnimationFrame(() => {
+      if (myToken !== filterTransitionToken) return;
+      gridContainer.style.minHeight = "";
+    });
+    return;
+  }
+
+  const lockedHeight = gridContainer.offsetHeight;
+  gridContainer.style.minHeight = `${lockedHeight}px`;
+
+  nonMatchingRows.forEach((row) => {
+    row.classList.add("is-exiting");
+  });
+
+  window.setTimeout(() => {
+    if (myToken !== filterTransitionToken) return;
+    renderProjectCards();
+    window.requestAnimationFrame(() => {
+      if (myToken !== filterTransitionToken) return;
+      gridContainer.style.minHeight = "";
+    });
+  }, 200);
 }
 
 function renderProjectCategoryFilters() {
   const filterContainer = document.getElementById("project-category-filters");
   if (!filterContainer) return;
 
-  const categories = portfolioData.projectCategories || ["All"];
+  if (!filterBarInitialized) {
+    filterBarInitialized = true;
+    const categories = portfolioData.projectCategories || ["All", "Frontend", "3D"];
 
-  filterContainer.innerHTML = categories
-    .map((cat) => {
-      const isActive = cat === activeCategory;
-      return `
-        <button 
-          type="button" 
-          data-category="${cat}"
-          class="category-filter-btn border ${isActive
-          ? "bg-white text-black border-white shadow-sm"
-          : "bg-transparent text-slate-400 border-transparent hover:text-white hover:bg-white/[0.05]"
-        }"
-          aria-pressed="${isActive}">
-          ${cat}
-        </button>
-      `;
-    })
-    .join("");
+    filterContainer.innerHTML = `
+      <span id="filter-active-pill" class="filter-active-pill" aria-hidden="true"></span>
+      ${categories
+        .map((cat) => {
+          const isActive = cat === activeCategory;
+          return `
+            <button
+              type="button"
+              data-category="${escapeHtml(cat)}"
+              class="category-filter-btn ${isActive ? "is-active" : ""} focus-visible:outline-none"
+              aria-pressed="${isActive}">
+              ${escapeHtml(cat)}
+            </button>
+          `;
+        })
+        .join("")}
+    `;
 
-  filterContainer.querySelectorAll(".category-filter-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      activeCategory = btn.getAttribute("data-category");
-      renderProjectCategoryFilters();
-      renderProjectCards();
+    const buttons = Array.from(filterContainer.querySelectorAll(".category-filter-btn"));
+    buttons.forEach((btn, idx) => {
+      btn.addEventListener("click", () => {
+        const nextCategory = btn.getAttribute("data-category") || "All";
+        switchProjectCategory(nextCategory);
+      });
+
+      btn.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          const dir = e.key === "ArrowRight" ? 1 : -1;
+          const nextIdx = (idx + dir + buttons.length) % buttons.length;
+          const targetBtn = buttons[nextIdx];
+          if (targetBtn) {
+            targetBtn.focus();
+            switchProjectCategory(targetBtn.getAttribute("data-category") || "All");
+          }
+        }
+      });
     });
-  });
+
+    window.addEventListener("resize", () => updateFilterPillPosition(true), { passive: true });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => updateFilterPillPosition(true));
+    }
+
+    updateFilterPillPosition(true);
+  } else {
+    updateFilterButtonStates();
+    updateFilterPillPosition(false);
+  }
 }
 
 /**
- * Mengambil metadata aktif untuk project (mendukung perubahan judul, deskripsi,
- * metrik, techStack, dan link per slide di portfolioStack)
+ * Menghasilkan tombol aksi per proyek:
+ * - Frontend: Live Demo (primary) jika URL tersedia
+ * - 3D: View Full Image (membuka lightbox dengan gambar yang sama)
+ */
+function renderProjectRowActionsHTML(project, imageSrc, imageAlt) {
+  const hasDemo = isNonEmptyUrl(project.demoUrl);
+  const is3D = project.category === "3D" && Boolean(imageSrc);
+
+  if (!hasDemo && !is3D) return "";
+
+  const demoBtnHTML = hasDemo
+    ? `<a href="${escapeHtml(project.demoUrl)}" target="_blank" rel="noopener noreferrer"
+          class="btn-tap-target inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-white hover:bg-slate-200 text-[#08080A] font-sans font-semibold text-xs transition-colors focus-visible:outline-none"
+          aria-label="Buka Live Demo ${escapeHtml(project.title)}">
+        <span>Live Demo</span>
+        ${icons.externalLink}
+      </a>`
+    : "";
+
+  const lightboxBtnHTML = is3D
+    ? `<button type="button"
+          data-lightbox-src="${escapeHtml(imageSrc)}"
+          data-lightbox-title="${escapeHtml(project.title)}"
+          data-lightbox-alt="${escapeHtml(imageAlt)}"
+          class="btn-tap-target inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2 rounded-xl border border-white/20 hover:border-white/40 bg-white/[0.04] hover:bg-white/[0.1] text-slate-100 hover:text-white font-sans font-medium text-xs transition-colors focus-visible:outline-none"
+          aria-label="View Full Image: ${escapeHtml(project.title)}">
+        ${icons.expand}
+        <span>View Full Image</span>
+      </button>`
+    : "";
+
+  return `
+    <div class="reveal flex flex-wrap items-center gap-2.5 pt-1" style="--project-reveal-delay: 400ms;">
+      ${demoBtnHTML}
+      ${lightboxBtnHTML}
+    </div>
+  `;
+}
+
+/**
+ * Kompatibilitas helper untuk dialog modal proyek
  */
 function getActiveProjectVariant(project) {
-  const stack = Array.isArray(project.portfolioStack) ? project.portfolioStack : [];
-  const currentIdx = projectStackState[project.id] || 0;
-  const activeItem = stack[currentIdx] || null;
-
   return {
-    title: (activeItem && activeItem.projectTitle) || project.title,
-    badge: (activeItem && activeItem.badge) || project.badge,
-    shortDescription: (activeItem && activeItem.shortDescription) || project.shortDescription,
-    fullDescription:
-      (activeItem && activeItem.fullDescription) ||
-      (activeItem && activeItem.shortDescription) ||
-      project.fullDescription ||
-      project.shortDescription,
-    metrics:
-      activeItem && activeItem.metrics !== undefined ? activeItem.metrics : project.metrics,
-    techStack:
-      activeItem && Array.isArray(activeItem.techStack)
-        ? activeItem.techStack
-        : project.techStack,
-    githubUrl:
-      activeItem && activeItem.githubUrl !== undefined ? activeItem.githubUrl : project.githubUrl,
-    liveUrl:
-      activeItem && activeItem.liveUrl !== undefined ? activeItem.liveUrl : project.liveUrl,
+    title: project.title,
+    badge: project.badge || "",
+    shortDescription: project.description || project.shortDescription || "",
+    fullDescription: project.fullDescription || project.description || project.shortDescription || "",
+    metrics: project.metrics || "",
+    techStack: Array.isArray(project.tech) ? project.tech : project.techStack || [],
+    githubUrl: project.repoUrl || project.githubUrl || "",
+    liveUrl: project.demoUrl || project.liveUrl || "",
   };
 }
 
-/**
- * Mengecek apakah URL masih berupa placeholder yang belum diisi ("#")
- */
-function isPendingUrl(url) {
-  return typeof url === "string" && url.trim() === "#";
-}
-
-/**
- * Menghasilkan tombol aksi Live Demo pada footer kartu proyek
- */
-function renderProjectCardLinksHTML(variant) {
-  if (!variant.liveUrl) return "";
-
-  const liveHTML = isPendingUrl(variant.liveUrl)
-    ? `<button type="button" data-pending-link="Live Demo"
-           class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-slate-200 bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-           aria-label="Live Demo (Coming soon)"
-           title="Live Demo (Coming soon)">
-          <span>Coming soon</span>
-        </button>`
-    : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
-           class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[38px] font-sans font-medium text-xs rounded-lg text-white bg-white/10 hover:bg-white/15 border border-white/20 transition-colors"
-           aria-label="Open live project preview">
-          <span>Live Demo</span>
-          ${icons.externalLink}
-        </a>`;
-
-  return liveHTML;
-}
-
-/**
- * Menghasilkan tombol aksi Live Demo di footer modal proyek
- */
 function renderModalActionsHTML(variant) {
-  if (!variant.liveUrl) return "";
-
-  const liveHTML = isPendingUrl(variant.liveUrl)
-    ? `<button type="button" data-pending-link="Visit Live Demo"
-           class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors"
-           aria-label="Live Demo (Coming soon)">
-          <span>Live Demo (Coming soon)</span>
-        </button>`
-    : `<a href="${variant.liveUrl}" target="_blank" rel="noopener noreferrer" 
-           class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
-          <span>Visit Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
-        </a>`;
+  const hasDemo = isNonEmptyUrl(variant.liveUrl);
+  if (!hasDemo) return "";
 
   return `
     <div class="pt-5 border-t border-white/10 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
-      ${liveHTML}
+      <a href="${escapeHtml(variant.liveUrl)}" target="_blank" rel="noopener noreferrer"
+          class="btn-tap-target w-full sm:w-auto px-5 py-2 font-sans font-semibold text-xs rounded-xl text-black bg-white hover:bg-slate-200 transition-colors">
+        <span>Live Demo</span> <span class="ml-1.5">${icons.externalLink}</span>
+      </a>
     </div>
   `;
 }
 
-
-/**
- * Menghasilkan markup Interactive Stacked Window Deck (seperti referensi Gambar 3)
- */
-function renderStackedDeckHTML(project, deckScopeId) {
-  const stack = project.portfolioStack || [];
-  if (stack.length === 0) return "";
-
-  const currentIndex = projectStackState[project.id] || 0;
-  const total = stack.length;
-
-  const cardsMarkup = stack
-    .map((item, idx) => {
-      const relativePos = (idx - currentIndex + total) % total;
-      const posAttr = relativePos <= 2 ? String(relativePos) : "hidden";
-      const numLabel = `${String(idx + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
-
-      return `
-        <div class="stack-window-card" data-stack-index="${idx}" data-stack-pos="${posAttr}" role="group" aria-label="${item.title}">
-          <div class="stack-window-bar">
-            <span class="stack-window-title">${item.title}</span>
-            <span class="stack-window-index">${numLabel}</span>
-          </div>
-          <div class="stack-window-body">
-            <img src="${item.image}" alt="${item.title}" width="800" height="450" loading="lazy" />
-            ${item.subtitle
-          ? `<div class="stack-window-caption">
-                    <span class="text-[11px] font-medium text-slate-200 truncate">${item.subtitle}</span>
-                  </div>`
-          : ""
-        }
-          </div>
-        </div>
-      `;
-    })
-    .join("");
-
-  return `
-    <div class="stack-showcase-wrapper" tabindex="0" data-deck-project="${project.id}" data-deck-scope="${deckScopeId}" aria-label="Interactive portfolio stack for ${project.title}. Scroll, swipe, click, or use arrow keys to switch works.">
-      <div class="stack-deck-stage">
-        ${cardsMarkup}
-      </div>
-    </div>
-  `;
+function renderStackedDeckHTML() {
+  return "";
 }
 
-/**
- * Memperbarui posisi kartu pada deck serta menyinkronkan judul, deskripsi, metrik,
- * tech stack, dan tautan aksi untuk projectId tertentu
- */
-function stepProjectStack(projectId, delta = 1) {
-  const project = portfolioData.projects.find((p) => p.id === projectId);
-  if (!project || !project.portfolioStack || project.portfolioStack.length === 0) return;
-
-  const total = project.portfolioStack.length;
-  const current = projectStackState[projectId] || 0;
-  const nextIndex = (current + delta + total) % total;
-  projectStackState[projectId] = nextIndex;
-
-  const variant = getActiveProjectVariant(project);
-
-  // Update semua deck instance (baik di kartu maupun di dalam modal jika sedang terbuka)
-  const wrappers = document.querySelectorAll(`[data-deck-project="${projectId}"]`);
-  wrappers.forEach((wrapper) => {
-    const cards = wrapper.querySelectorAll(".stack-window-card");
-    cards.forEach((card) => {
-      const idx = Number(card.getAttribute("data-stack-index"));
-      const relativePos = (idx - nextIndex + total) % total;
-      const posAttr = relativePos <= 2 ? String(relativePos) : "hidden";
-      card.setAttribute("data-stack-pos", posAttr);
-    });
-  });
-
-  // Update counter text di footer kartu & modal (jika ada)
-  const counters = document.querySelectorAll(`[data-stack-counter="${projectId}"]`);
-  counters.forEach((counterEl) => {
-    counterEl.textContent = `${nextIndex + 1} / ${total}`;
-  });
-
-  // Sinkronkan konten teks & tautan pada kartu proyek
-  const cardBadge = document.querySelector(`[data-project-badge="${projectId}"]`);
-  const cardTitle = document.querySelector(`[data-project-title="${projectId}"]`);
-  const cardDesc = document.querySelector(`[data-project-desc="${projectId}"]`);
-  const cardMetrics = document.querySelector(`[data-project-metrics="${projectId}"]`);
-  const cardTech = document.querySelector(`[data-project-tech="${projectId}"]`);
-  const cardLinks = document.querySelector(`[data-project-links="${projectId}"]`);
-  const dynamicBlock = document.querySelector(`[data-project-dynamic="${projectId}"]`);
-
-  if (cardBadge && variant.badge) cardBadge.textContent = variant.badge;
-  if (cardTitle) cardTitle.textContent = variant.title;
-  if (cardDesc) cardDesc.textContent = variant.shortDescription;
-  if (cardMetrics) {
-    if (variant.metrics) {
-      cardMetrics.textContent = variant.metrics;
-      cardMetrics.classList.remove("hidden");
-    } else {
-      cardMetrics.classList.add("hidden");
-    }
-  }
-  if (cardTech) {
-    cardTech.innerHTML = variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("");
-  }
-  if (cardLinks) {
-    cardLinks.innerHTML = renderProjectCardLinksHTML(variant);
-  }
-  if (dynamicBlock) {
-    dynamicBlock.classList.remove("stack-content-swap");
-    void dynamicBlock.offsetWidth;
-    dynamicBlock.classList.add("stack-content-swap");
-  }
-
-  // Sinkronkan konten di dalam Modal jika modal untuk proyek ini sedang terbuka
-  const modal = document.getElementById("project-modal");
-  if (modal && !modal.classList.contains("hidden")) {
-    const modalBadge = document.querySelector(`[data-modal-badge="${projectId}"]`);
-    const modalTitle = document.querySelector(`[data-modal-title="${projectId}"]`);
-    const modalDesc = document.querySelector(`[data-modal-desc="${projectId}"]`);
-    const modalMetricsBox = document.querySelector(`[data-modal-metrics="${projectId}"]`);
-    const modalMetricsText = document.querySelector(`[data-modal-metrics-text="${projectId}"]`);
-    const modalTech = document.querySelector(`[data-modal-tech="${projectId}"]`);
-    const modalLinks = document.querySelector(`[data-modal-links="${projectId}"]`);
-
-    if (modalBadge && variant.badge) modalBadge.textContent = variant.badge;
-    if (modalTitle) modalTitle.textContent = variant.title;
-    if (modalDesc) modalDesc.textContent = variant.fullDescription;
-    if (modalMetricsBox && modalMetricsText) {
-      if (variant.metrics) {
-        modalMetricsText.textContent = variant.metrics;
-        modalMetricsBox.classList.remove("hidden");
-      } else {
-        modalMetricsBox.classList.add("hidden");
-      }
-    }
-    if (modalTech) {
-      modalTech.innerHTML = variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("");
-    }
-    if (modalLinks) {
-      modalLinks.innerHTML = renderModalActionsHTML(variant);
-    }
-  }
-}
-
-/**
- * Mengaktifkan interaksi Scroll (Wheel), Geser (Swipe / Pointer Drag), Klik, & Keyboard pada Stacked Deck
- */
-function attachStackDeckInteractions(rootElement = document) {
-  const wrappers = rootElement.querySelectorAll(".stack-showcase-wrapper");
-
-  wrappers.forEach((wrapper) => {
-    if (wrapper.dataset.bound === "true") return;
-    wrapper.dataset.bound = "true";
-
-    const projectId = wrapper.getAttribute("data-deck-project");
-    let lastWheelTime = 0;
-    let startX = null;
-    let startY = null;
-    let isDragging = false;
-
-    // 1. Interaksi Scroll (Mouse Wheel / Trackpad)
-    wrapper.addEventListener(
-      "wheel",
-      (e) => {
-        const now = Date.now();
-        if (Math.abs(e.deltaY) < 6 && Math.abs(e.deltaX) < 6) return;
-        e.preventDefault();
-        if (now - lastWheelTime < 360) return;
-        lastWheelTime = now;
-
-        const delta = e.deltaY > 0 || e.deltaX > 0 ? 1 : -1;
-        stepProjectStack(projectId, delta);
-      },
-      { passive: false }
-    );
-
-    // 2. Interaksi Geser (Pointer / Touch Drag) & Klik
-    wrapper.addEventListener("pointerdown", (e) => {
-      startX = e.clientX;
-      startY = e.clientY;
-      isDragging = false;
-    });
-
-    wrapper.addEventListener("pointermove", (e) => {
-      if (startX === null) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-      if (Math.abs(dx) > 12 || Math.abs(dy) > 12) {
-        isDragging = true;
-      }
-    });
-
-    wrapper.addEventListener("pointerup", (e) => {
-      if (startX === null) return;
-      const dx = e.clientX - startX;
-      const dy = e.clientY - startY;
-
-      if (Math.abs(dx) > 30 || Math.abs(dy) > 35) {
-        // Geser kiri/atas -> karya selanjutnya; kanan/bawah -> karya sebelumnya
-        const direction = dx < -25 || dy < -30 ? 1 : -1;
-        stepProjectStack(projectId, direction);
-      } else if (!isDragging) {
-        // Klik langsung pada kartu -> pindah ke karya selanjutnya
-        stepProjectStack(projectId, 1);
-      }
-
-      startX = null;
-      startY = null;
-      isDragging = false;
-    });
-
-    wrapper.addEventListener("pointercancel", () => {
-      startX = null;
-      startY = null;
-      isDragging = false;
-    });
-
-    // 3. Interaksi Keyboard (R-32 Accessibility)
-    wrapper.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        stepProjectStack(projectId, 1);
-      } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-        e.preventDefault();
-        stepProjectStack(projectId, -1);
-      }
-    });
-  });
-
-  // Tombol Prev / Next jika tersedia
-  rootElement.querySelectorAll("[data-stack-action]").forEach((btn) => {
-    if (btn.dataset.bound === "true") return;
-    btn.dataset.bound = "true";
-
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const projectId = btn.getAttribute("data-project-id");
-      const dir = btn.getAttribute("data-stack-action") === "prev" ? -1 : 1;
-      stepProjectStack(projectId, dir);
-    });
-  });
-}
+function attachStackDeckInteractions() { }
 
 function renderProjectCards() {
   const gridContainer = document.getElementById("projects-grid");
   if (!gridContainer) return;
 
-  const filteredProjects =
+  const curatedProjects = getCuratedVisibleProjects();
+  const visibleProjects =
     activeCategory === "All"
-      ? portfolioData.projects
-      : portfolioData.projects.filter((p) => p.category === activeCategory);
+      ? curatedProjects
+      : curatedProjects.filter((p) => p.category === activeCategory);
 
   // Handle Empty State (R-27 Requirement)
-  if (filteredProjects.length === 0) {
+  if (visibleProjects.length === 0) {
     gridContainer.innerHTML = `
-      <div class="col-span-full py-16 text-center border border-dashed border-white/10 rounded-2xl p-8 bg-white/[0.01]">
-        <p class="font-sans text-sm font-medium text-slate-300 mb-2">No projects found in category "${activeCategory}".</p>
-        <p class="text-xs text-slate-500 mb-5">Try selecting another category filter or view all projects.</p>
+      <div class="py-16 text-center">
+        <p class="font-sans text-sm font-medium text-slate-300 mb-2">Belum ada project pada kategori "${escapeHtml(activeCategory)}".</p>
+        <p class="text-xs text-slate-400 mb-5">Silakan pilih kategori lain atau tampilkan semua project.</p>
         <button 
           type="button" 
           id="reset-filter-btn" 
-          class="font-sans font-medium text-xs px-4 py-2 rounded-full border border-white/20 bg-white/5 text-white hover:bg-white/10 transition-colors">
-          Reset Filter to All
+          class="btn-tap-target font-sans font-medium text-xs px-4 py-2 min-h-[44px] rounded-full border border-white/20 bg-white/5 text-white hover:bg-white/10 transition-colors focus-visible:outline-none">
+          Tampilkan Semua
         </button>
       </div>
     `;
@@ -611,96 +651,79 @@ function renderProjectCards() {
     const resetBtn = document.getElementById("reset-filter-btn");
     if (resetBtn) {
       resetBtn.addEventListener("click", () => {
-        activeCategory = "All";
-        renderProjectCategoryFilters();
-        renderProjectCards();
+        switchProjectCategory("All");
       });
     }
     return;
   }
 
-  // Render Project Cards
-  gridContainer.innerHTML = filteredProjects
-    .map((project) => {
-      const isFeatured = project.featured;
-      const colSpanClass = isFeatured ? "md:col-span-2 lg:col-span-2" : "col-span-1";
-      const hasStack = Array.isArray(project.portfolioStack) && project.portfolioStack.length > 0;
-      const variant = getActiveProjectVariant(project);
-
-      const mediaPreviewMarkup = hasStack
-        ? renderStackedDeckHTML(project, "card")
-        : project.image
-          ? `
-          <div class="relative w-full aspect-video mb-5 rounded-xl overflow-hidden border border-white/10 bg-[#121216] group-hover:border-white/20 transition-all">
-            <img 
-              src="${project.image}" 
-              alt="${project.title} preview" 
-              width="800" 
-              height="450" 
-              loading="lazy" 
-              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" 
-            />
-          </div>
-        `
-          : "";
-
-      const footerLinksMarkup = renderProjectCardLinksHTML(variant);
+  // Render Split-Row Editorial Showcase dengan stagger reveal (gambar 0ms, teks mulai 120ms + 70ms per elemen anak)
+  gridContainer.innerHTML = visibleProjects
+    .map((project, idx) => {
+      const indexLabel = String(idx + 1).padStart(2, "0");
+      const imageSrc = project.image || "assets/images/gymflow.png";
+      const imageAlt =
+        project.imageAlt ||
+        `Pratinjau karya ${project.category}: ${project.title}`;
+      const descriptionText = project.description || project.shortDescription || "";
+      const techList = Array.isArray(project.tech)
+        ? project.tech
+        : Array.isArray(project.techStack)
+          ? project.techStack
+          : [];
+      const actionsMarkup = renderProjectRowActionsHTML(project, imageSrc, imageAlt);
 
       return `
-        <article class="card-project rounded-2xl p-6 flex flex-col justify-between ${colSpanClass} group relative">
-          <div>
-            <!-- Header Card: Category & Badge (Clean Sans-Serif Typography) -->
-            <div class="flex items-center justify-between gap-2 mb-4">
-              <span class="font-sans text-xs font-medium text-slate-300 bg-white/[0.04] border border-white/10 px-3 py-1 rounded-full">
-                ${project.category}
-              </span>
-              ${variant.badge
-          ? `<span data-project-badge="${project.id}" class="font-sans text-xs font-medium text-slate-300 border border-white/10 px-3 py-1 rounded-full bg-white/[0.02]">
-                      ${variant.badge}
-                    </span>`
-          : ""
-        }
+        <article class="project-split-row group py-8 sm:py-10 lg:py-12 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-10 items-start" data-project-id="${escapeHtml(project.id)}" data-project-category="${escapeHtml(project.category)}">
+          <!-- Desktop Left Index Gutter (01, 02, 03, 04) -->
+          <div class="reveal hidden lg:block lg:col-span-1 pt-1" style="--project-reveal-delay: 0ms;">
+            <span class="font-mono text-xs font-medium text-slate-500 group-hover:text-slate-300 tabular-nums transition-colors">${indexLabel}</span>
+          </div>
+
+          <!-- Left Column: Single Representative 16:9 Image (delay 0ms) -->
+          <div class="reveal md:col-span-5 lg:col-span-5" style="--project-reveal-delay: 0ms;">
+            <div class="flex items-center gap-2.5 mb-3 md:hidden">
+              <span class="font-mono text-xs font-medium text-slate-400 tabular-nums">${indexLabel}</span>
+              <span class="text-slate-600" aria-hidden="true">·</span>
+              <span class="font-mono text-[11px] uppercase tracking-widest text-slate-400">${escapeHtml(project.category)}</span>
             </div>
 
-            ${mediaPreviewMarkup}
-
-            <div data-project-dynamic="${project.id}">
-              <!-- Title -->
-              <h3 data-project-title="${project.id}" class="text-lg md:text-xl font-bold text-white tracking-tight mb-2.5 group-hover:text-slate-100 transition-colors">
-                ${variant.title}
-              </h3>
-
-              <!-- Description -->
-              <p data-project-desc="${project.id}" class="text-sm text-slate-400 leading-relaxed mb-5">
-                ${variant.shortDescription}
-              </p>
-
-              <!-- Metrics -->
-              <div data-project-metrics="${project.id}" class="mb-5 inline-flex items-center gap-2 font-sans text-xs font-medium text-slate-300 border-l-2 border-white/25 pl-3 py-0.5 ${variant.metrics ? "" : "hidden"}">
-                ${variant.metrics || ""}
-              </div>
+            <div class="project-split-media w-full aspect-video">
+              <img 
+                src="${escapeHtml(imageSrc)}" 
+                alt="${escapeHtml(imageAlt)}" 
+                width="800" 
+                height="450" 
+                loading="lazy" 
+                class="w-full h-full object-cover" 
+              />
             </div>
           </div>
 
-          <div>
-            <!-- Tech Stack Pills -->
-            <div data-project-tech="${project.id}" class="flex flex-wrap gap-1.5 mb-6">
-              ${variant.techStack.map((tech) => `<span class="tech-pill">${tech}</span>`).join("")}
+          <!-- Right Column: Staggered Children (120ms, 190ms, 260ms, 330ms, 400ms) -->
+          <div class="md:col-span-7 lg:col-span-6 flex flex-col justify-between h-full">
+            <div>
+              <div class="reveal hidden md:flex items-center gap-2.5 mb-2.5" style="--project-reveal-delay: 120ms;">
+                <span class="lg:hidden font-mono text-xs font-medium text-slate-400 tabular-nums">${indexLabel}</span>
+                <span class="lg:hidden text-slate-600" aria-hidden="true">·</span>
+                <span class="font-mono text-[11px] uppercase tracking-widest text-slate-400">${escapeHtml(project.category)}</span>
+              </div>
+
+              <h3 class="reveal text-xl sm:text-2xl font-bold text-white tracking-tight leading-snug mb-3 group-hover:text-slate-100 transition-colors" style="--project-reveal-delay: 190ms;">
+                ${escapeHtml(project.title)}
+              </h3>
+
+              <p class="reveal project-row-desc text-sm sm:text-[15px] text-slate-300 leading-relaxed mb-5" style="--project-reveal-delay: 260ms;">
+                ${escapeHtml(descriptionText)}
+              </p>
             </div>
 
-            <!-- Actions Footer -->
-            <div class="pt-4 border-t border-white/10 flex items-center justify-between gap-3 text-xs">
-              <button 
-                type="button" 
-                class="open-project-modal-btn inline-flex items-center gap-1.5 font-sans font-medium text-xs text-slate-300 hover:text-white transition-colors"
-                data-project-id="${project.id}">
-                ${icons.info}
-                <span>Details</span>
-              </button>
-
-              <div data-project-links="${project.id}" class="flex items-center gap-2">
-                ${footerLinksMarkup}
+            <div class="mt-auto space-y-4">
+              <div class="reveal flex flex-wrap gap-1.5" style="--project-reveal-delay: 330ms;">
+                ${techList.map((tech) => `<span class="tech-pill">${escapeHtml(tech)}</span>`).join("")}
               </div>
+
+              ${actionsMarkup}
             </div>
           </div>
         </article>
@@ -708,24 +731,7 @@ function renderProjectCards() {
     })
     .join("");
 
-  // Attach modal trigger listeners
-  gridContainer.querySelectorAll(".open-project-modal-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const pId = btn.getAttribute("data-project-id");
-      openProjectModal(pId);
-    });
-  });
-
-  // Attach interactive stacked deck interactions
-  attachStackDeckInteractions(gridContainer);
-
-  // Attach interactive spotlight hover to cards
-  initCardSpotlight();
-
-  // Re-bind continuous scroll choreography for newly filtered cards
-  if (typeof refreshScrollMotionTargets === "function") {
-    refreshScrollMotionTargets();
-  }
+  observeProjectRows();
 }
 
 /* ==============================================================================
@@ -829,27 +835,27 @@ function initExperienceSection() {
 
           <ul class="space-y-2 mb-4 text-xs md:text-sm text-slate-300">
             ${exp.description
-            .map(
-              (point) => `
+          .map(
+            (point) => `
                 <li class="flex items-start gap-2.5 leading-relaxed">
                   <span class="text-slate-500 mt-1 shrink-0">›</span>
                   <span>${point}</span>
                 </li>
               `
-            )
-            .join("")}
+          )
+          .join("")}
           </ul>
 
           <div class="flex flex-wrap gap-1.5">
             ${exp.skillsUsed
-            .map(
-              (s) => `
+          .map(
+            (s) => `
                 <span class="tech-pill">
                   ${s}
                 </span>
               `
-            )
-            .join("")}
+          )
+          .join("")}
           </div>
         </div>
       </div>
@@ -1254,8 +1260,8 @@ function refreshScrollMotionTargets() {
     });
   });
 
-  // Kartu proyek dikontrol secara kontinu berbasis posisi scroll (scale & glide)
-  scrollScrubCards = Array.from(document.querySelectorAll(".card-project"));
+  // Kartu proyek menggunakan CSS hover alami (tanpa animasi scroll berlebihan)
+  scrollScrubCards = [];
   updateContinuousScrollVisuals(smoothScrollY);
 }
 
